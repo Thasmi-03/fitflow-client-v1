@@ -123,10 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     clearAuthData();
     setUser(null);
-<<<<<<< HEAD
     // Use hard redirect to ensure we go to homepage
-=======
->>>>>>> origin/main
     window.location.href = '/';
   };
 
