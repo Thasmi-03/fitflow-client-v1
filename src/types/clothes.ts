@@ -1,7 +1,27 @@
+// Category constants and type
+export const CATEGORIES = [
+    'dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts',
+    'suit', 'blazer', 'sweater', 'coat', 'tshirt', 'frock'
+] as const;
+
+export const PARTNER_CATEGORIES = [
+    ...CATEGORIES,
+    'saree', 'kurta', 'lehenga'
+] as const;
+
+export type Category = typeof CATEGORIES[number];
+export type PartnerCategory = typeof PARTNER_CATEGORIES[number];
+
+// Occasion constants and type
+export const OCCASIONS = [
+    'casual', 'formal', 'business', 'party', 'wedding', 'sports', 'beach'
+] as const;
+
+export type Occasion = typeof OCCASIONS[number];
+
+// Other types
 export type SkinTone = 'fair' | 'light' | 'medium' | 'tan' | 'deep' | 'dark';
-export type Occasion = 'casual' | 'formal' | 'party' | 'wedding' | 'business' | 'sports' | 'beach';
 export type Gender = 'male' | 'female' | 'unisex';
-export type Category = 'dress' | 'shirt' | 'pants' | 'jacket' | 'skirt' | 'top' | 'shorts' | 'suit' | 'Frock' | 'blazer' | 'sweater' | 'coat' | 'Tshirt' | 'gown';
 export type Color = 'red' | 'blue' | 'green' | 'yellow' | 'black' | 'white' | 'gray' | 'brown' | 'pink' | 'purple' | 'orange' | 'beige' | 'navy' | 'maroon' | 'teal' | 'coral' | 'multi';
 
 export interface Clothes {
@@ -25,7 +45,7 @@ export interface Clothes {
     createdAt: string;
     updatedAt: string;
     // New fields for suggestions and matching
-    occasion?: Occasion; // Changed from array to single string to match backend
+    occasion?: Occasion[]; // Array of occasions (1-4)
     usageCount?: number;
     // Partner-specific fields
     stock?: number;
@@ -48,7 +68,7 @@ export interface CreateClothesInput {
     // Partner-specific fields
     size?: string;
     price?: number;
-    occasion?: Occasion; // Single occasion value, not array
+    occasion?: Occasion[]; // Array of occasions (1-4)
     stock?: number;
 }
 
