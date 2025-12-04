@@ -4,7 +4,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, DollarSign, TrendingUp, Plus, ShoppingBag, Edit, BarChart3, Trash2 } from 'lucide-react';
+import { Package, DollarSign, TrendingUp, Plus, ShoppingBag, Edit, BarChart3, Trash2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { getPartnerClothes, deletePartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
@@ -60,7 +60,7 @@ export default function PartnerDashboard() {
 
     // Calculate stats from real data
     const totalRevenue = clothes?.reduce((acc, item) => acc + (item.price * (item.sales || 0)), 0) || 0;
-    const totalSales = clothes?.reduce((acc, item) => acc + (item.sales || 0), 0) || 0;
+    const totalViews = clothes?.reduce((acc, item) => acc + (item.views?.length || 0), 0) || 0;
     const totalStock = clothes?.reduce((acc, item) => acc + (item.stock || 0), 0) || 0;
     const totalProducts = clothes?.length || 0;
 
@@ -107,13 +107,13 @@ export default function PartnerDashboard() {
                             <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 flex flex-col min-h-[140px]">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <CardTitle className="text-sm font-medium text-blue-900">
-                                        Total Sales
+                                        Total Views
                                     </CardTitle>
-                                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                                    <Eye className="h-5 w-5 text-blue-600" />
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-center">
-                                    <div className="text-3xl font-bold text-blue-900">{totalSales}</div>
-                                    <p className="text-xs text-blue-700 mt-1">Items sold</p>
+                                    <div className="text-3xl font-bold text-blue-900">{totalViews}</div>
+                                    <p className="text-xs text-blue-700 mt-1">Styler views</p>
                                 </CardContent>
                             </Card>
 
