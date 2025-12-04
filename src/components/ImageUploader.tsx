@@ -1,7 +1,16 @@
 // src/components/ImageUploader.tsx
 import { useState, ChangeEvent } from "react";
 
-export default function ImageUploader() {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+interface ImageUploaderProps {
+  onUploadComplete?: (imageUrl: string) => void;
+  useCloudinaryDirect?: boolean;
+}
+
+export default function ImageUploader({ onUploadComplete, useCloudinaryDirect = false }: ImageUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -14,21 +23,27 @@ export default function ImageUploader() {
     setPreview(URL.createObjectURL(f));
   };
 
-  const handleUpload = async () => {
+  // Upload directly to Cloudinary (client-side)
+  const uploadToCloudinary = async () => {
     if (!file) return alert("Choose an image first");
-    setUploading(true);
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      return alert("Cloudinary not configured");
+    }
 
+    setUploading(true);
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
-      const res = await fetch("http://localhost:5000/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+      );
       const data = await res.json();
-      if (data.success) {
-        setImageUrl(data.imageUrl);
+      if (data.secure_url) {
+        setImageUrl(data.secure_url);
+        onUploadComplete?.(data.secure_url);
       } else {
         alert("Upload failed");
       }
@@ -37,6 +52,42 @@ export default function ImageUploader() {
       alert("Upload error");
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Upload via backend API
+  const uploadViaBackend = async () => {
+    if (!file) return alert("Choose an image first");
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(`${API_URL}/api/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setImageUrl(data.imageUrl);
+        onUploadComplete?.(data.imageUrl);
+      } else {
+        alert("Upload failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Upload error");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleUpload = () => {
+    if (useCloudinaryDirect && CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET) {
+      uploadToCloudinary();
+    } else {
+      uploadViaBackend();
     }
   };
 
