@@ -10,6 +10,7 @@ export interface PartnerClothes {
     price: number;
     stock?: number;
     sales?: number;
+    views?: Array<{ stylerId: string; viewedAt: string }>;
     image?: string;
     description?: string;
     note?: string; // Backend field name
@@ -140,5 +141,11 @@ export const getSmartSuggestions = async (params?: {
     const url = `/api/partnerclothes/suggestions${queryString ? `?${queryString}` : ''}`;
 
     const response = await apiClient.get(url);
+    return response.data;
+};
+
+// Record a view on a partner cloth (styler only)
+export const recordPartnerClothView = async (id: string): Promise<{ message: string; viewCount: number }> => {
+    const response = await apiClient.post(`/api/partnerclothes/${id}/view`);
     return response.data;
 };
