@@ -22,15 +22,49 @@ export default function StylerClothesPage() {
     const [filterSkinTone, setFilterSkinTone] = useState('all');
     const [filterGender, setFilterGender] = useState('all');
 
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const limit = 12;
+
+    // Debounce search term
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+            setPage(1); // Reset to page 1 on search change
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    // Reset page when filters change
+    useEffect(() => {
+        setPage(1);
+    }, [filterCategory, filterColor, filterSkinTone, filterGender]);
+
     useEffect(() => {
         loadClothes();
-    }, []);
+    }, [page, debouncedSearchTerm, filterCategory, filterColor, filterSkinTone, filterGender]);
 
     const loadClothes = async () => {
         try {
             setLoading(true);
-            const response = await getClothes();
+            const params: any = {
+                page,
+                limit,
+            };
+
+            if (debouncedSearchTerm) params.search = debouncedSearchTerm;
+            if (filterCategory !== 'all') params.category = filterCategory;
+            if (filterColor !== 'all') params.color = filterColor;
+            if (filterSkinTone !== 'all') params.skinTone = filterSkinTone;
+            if (filterGender !== 'all') params.gender = filterGender;
+
+            const response = await getClothes(params);
             setClothes(response.clothes);
+            setTotalPages(response.totalPages);
+            setTotalItems(response.total);
         } catch (error) {
             console.error('Error loading clothes:', error);
             toast.error('Failed to load clothes');
@@ -52,33 +86,12 @@ export default function StylerClothesPage() {
         }
     };
 
-    // Filter and search logic
-    const filteredClothes = useMemo(() => {
-        return clothes.filter((item) => {
-            const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.color.toLowerCase().includes(searchTerm.toLowerCase());
-
-            const matchesCategory = filterCategory === 'all' || item.category === filterCategory;
-            const matchesColor = filterColor === 'all' || item.color === filterColor;
-            const matchesSkinTone = filterSkinTone === 'all' || item.skinTone === filterSkinTone;
-            const matchesGender = filterGender === 'all' || item.gender === filterGender;
-
-            return matchesSearch && matchesCategory && matchesColor && matchesSkinTone && matchesGender;
-        });
-    }, [clothes, searchTerm, filterCategory, filterColor, filterSkinTone, filterGender]);
-
-    // Get unique values for filters
-    const categories = useMemo(() => Array.from(new Set(clothes.map(c => c.category))), [clothes]);
-    const colors = useMemo(() => Array.from(new Set(clothes.map(c => c.color))), [clothes]);
-    const skinTones = useMemo(() => {
-        const tones = clothes.map(c => c.skinTone).filter(t => t !== undefined);
-        return Array.from(new Set(tones));
-    }, [clothes]);
-    const genders = useMemo(() => {
-        const genderList = clothes.map(c => c.gender).filter(g => g !== undefined);
-        return Array.from(new Set(genderList));
-    }, [clothes]);
+    // Hardcoded options for filters since we don't have a separate endpoint for them yet
+    // In a real app, these might come from an API or config
+    const categories = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'Frock', 'blazer', 'sweater', 'coat', 'Tshirt', 'gown'];
+    const colors = ['red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'brown', 'pink', 'purple', 'orange', 'beige', 'navy', 'maroon', 'teal', 'coral', 'multi'];
+    const skinTones = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
+    const genders = ['male', 'female', 'unisex'];
 
     return (
         <ProtectedRoute allowedRoles={['styler']}>
@@ -171,7 +184,7 @@ export default function StylerClothesPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Package className="h-5 w-5" />
-                                    All Clothes ({filteredClothes.length})
+                                    All Clothes ({totalItems})
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -180,69 +193,94 @@ export default function StylerClothesPage() {
                                         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
                                         <p className="mt-4 text-gray-600">Loading...</p>
                                     </div>
-                                ) : filteredClothes.length === 0 ? (
+                                ) : clothes.length === 0 ? (
                                     <div className="text-center py-12">
                                         <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                                         <p className="text-gray-500 mb-4">
-                                            {clothes.length === 0 ? 'No clothes in wardrobe yet' : 'No clothes match your filters'}
+                                            {totalItems === 0 && !searchTerm && filterCategory === 'all' ? 'No clothes in wardrobe yet' : 'No clothes match your filters'}
                                         </p>
-                                        {clothes.length === 0 && (
+                                        {totalItems === 0 && !searchTerm && filterCategory === 'all' && (
                                             <Link href="/styler/clothes/add">
                                                 <Button>Add Your First Item</Button>
                                             </Link>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                        {filteredClothes.map((item) => {
-                                            // Handle both id and _id (for backward compatibility)
-                                            const itemId = item.id || (item as any)._id;
-                                            const imageUrl = item.imageUrl || (item as any).image;
+                                    <>
+                                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
+                                            {clothes.map((item) => {
+                                                // Handle both id and _id (for backward compatibility)
+                                                const itemId = item.id || (item as any)._id;
+                                                const imageUrl = item.imageUrl || (item as any).image;
 
-                                            return (
-                                                <div
-                                                    key={itemId}
-                                                    className="border rounded-lg p-4 hover:shadow-md transition-shadow flex flex-col h-full"
-                                                >
-                                                    {imageUrl && (
-                                                        <img
-                                                            src={imageUrl}
-                                                            alt={item.name}
-                                                            className="w-full h-48 object-cover rounded-md mb-3"
-                                                        />
-                                                    )}
-                                                    <div className="flex-1">
-                                                        <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
-                                                        <div className="space-y-1 text-sm text-gray-600 mb-3">
-                                                            <p>Category: <span className="font-medium">{item.category}</span></p>
-                                                            <p>Color: <span className="font-medium">{item.color}</span></p>
-                                                            {item.skinTone && <p>Skin Tone: <span className="font-medium">{item.skinTone}</span></p>}
-                                                            {item.gender && <p>Gender: <span className="font-medium">{item.gender}</span></p>}
-                                                            {item.age && <p>Age: <span className="font-medium">{item.age}</span></p>}
+                                                return (
+                                                    <div
+                                                        key={itemId}
+                                                        className="border rounded-lg p-4 hover:shadow-md transition-shadow flex flex-col h-full"
+                                                    >
+                                                        {imageUrl && (
+                                                            <img
+                                                                src={imageUrl}
+                                                                alt={item.name}
+                                                                className="w-full h-48 object-cover rounded-md mb-3"
+                                                            />
+                                                        )}
+                                                        <div className="flex-1">
+                                                            <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
+                                                            <div className="space-y-1 text-sm text-gray-600 mb-3">
+                                                                <p>Category: <span className="font-medium">{item.category}</span></p>
+                                                                <p>Color: <span className="font-medium">{item.color}</span></p>
+                                                                {item.skinTone && <p>Skin Tone: <span className="font-medium">{item.skinTone}</span></p>}
+                                                                {item.gender && <p>Gender: <span className="font-medium">{item.gender}</span></p>}
+                                                                {item.age && <p>Age: <span className="font-medium">{item.age}</span></p>}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex gap-2 mt-auto">
+                                                            <Link href={`/styler/clothes/edit/${itemId}`} className="flex-1">
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="w-full"
+                                                                >
+                                                                    Edit
+                                                                </Button>
+                                                            </Link>
+                                                            <Button
+                                                                variant="destructive"
+                                                                size="sm"
+                                                                onClick={() => handleDelete(itemId)}
+                                                            >
+                                                                Delete
+                                                            </Button>
                                                         </div>
                                                     </div>
-                                                    <div className="flex gap-2 mt-auto">
-                                                        <Link href={`/styler/clothes/edit/${itemId}`} className="flex-1">
-                                                            <Button
-                                                                variant="outline"
-                                                                size="sm"
-                                                                className="w-full"
-                                                            >
-                                                                Edit
-                                                            </Button>
-                                                        </Link>
-                                                        <Button
-                                                            variant="destructive"
-                                                            size="sm"
-                                                            onClick={() => handleDelete(itemId)}
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Pagination Controls */}
+                                        {totalPages > 1 && (
+                                            <div className="flex items-center justify-center gap-2 mt-8">
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                                    disabled={page === 1}
+                                                >
+                                                    Previous
+                                                </Button>
+                                                <span className="text-sm text-gray-600">
+                                                    Page {page} of {totalPages}
+                                                </span>
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                                    disabled={page === totalPages}
+                                                >
+                                                    Next
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </CardContent>
                         </Card>

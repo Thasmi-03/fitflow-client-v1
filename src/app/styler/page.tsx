@@ -2,87 +2,61 @@
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
-<<<<<<< HEAD
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, Sparkles, Shirt, Plus, ArrowRight, Heart } from 'lucide-react';
+import { Package, Sparkles, Shirt, Plus, ArrowRight, Heart, Store } from 'lucide-react';
 import Link from 'next/link';
 
 import { getClothes, Clothes } from '@/lib/api/clothes';
-import { getPublicPartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
+import { getSmartSuggestions, SmartSuggestion } from '@/lib/api/partner-clothes';
 import { getMyProfile, getFavorites } from '@/lib/api/user';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function StylerDashboard() {
     const router = useRouter();
-    const [suggestions, setSuggestions] = useState<Clothes[]>([]);
+    const [smartSuggestions, setSmartSuggestions] = useState<SmartSuggestion[]>([]);
     const [myClothes, setMyClothes] = useState<Clothes[]>([]);
-    const [favoriteSuggestions, setFavoriteSuggestions] = useState<PartnerClothes[]>([]);
+    const [favoriteSuggestions, setFavoriteSuggestions] = useState<any[]>([]);
     const [favoriteCount, setFavoriteCount] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [suggestionFilters, setSuggestionFilters] = useState<{
+        occasion: string | null;
+        gender: string | undefined;
+        skinTone: string | undefined;
+        userOccasions: string[];
+    } | null>(null);
 
     useEffect(() => {
         loadData();
     }, []);
 
-    // Helper function to get smart suggestions from user's clothes
-    const getSmartSuggestions = (clothes: Clothes[]): Clothes[] => {
-        if (clothes.length === 0) return [];
-
-        // Filter clothes that have occasion or skin tone data
-        const smartMatches = clothes.filter(item =>
-            item.occasion?.length || item.skinTone
-        );
-
-        // If we have smart matches, prioritize them
-        if (smartMatches.length > 0) {
-            return smartMatches.slice(0, 3);
-        }
-
-        // Otherwise, suggest complementary items (e.g., tops with bottoms)
-        const tops = clothes.filter(c =>
-            ['shirt', 'top', 'Tshirt', 'blouse', 'sweater'].includes(c.category.toLowerCase())
-        );
-        const bottoms = clothes.filter(c =>
-            ['pants', 'jeans', 'shorts', 'skirt'].includes(c.category.toLowerCase())
-        );
-
-        // Mix tops and bottoms for matching suggestions
-        const suggestions: Clothes[] = [];
-        for (let i = 0; i < Math.min(2, Math.min(tops.length, bottoms.length)); i++) {
-            if (tops[i]) suggestions.push(tops[i]);
-            if (bottoms[i]) suggestions.push(bottoms[i]);
-        }
-
-        // Fill remaining slots with any clothes
-        while (suggestions.length < 3 && suggestions.length < clothes.length) {
-            const remaining = clothes.filter(c => !suggestions.includes(c));
-            if (remaining.length > 0) {
-                suggestions.push(remaining[0]);
-            } else {
-                break;
-            }
-        }
-
-        return suggestions.slice(0, 3);
-    };
+    const [totalClothesCount, setTotalClothesCount] = useState(0);
 
     const loadData = async () => {
         try {
             setLoading(true);
-            // Load user's own clothes
-            const myClothesRes = await getClothes().catch(() => ({ clothes: [] }));
-            setMyClothes(myClothesRes.clothes);
 
-            // Get smart suggestions from user's own clothes
-            setSuggestions(getSmartSuggestions(myClothesRes.clothes));
+            // Load user's own clothes
+            const myClothesRes = await getClothes({ limit: 4 });
+            setMyClothes(myClothesRes.clothes);
+            setTotalClothesCount(myClothesRes.total);
+
+            // Load smart suggestions from Partner clothes based on user's profile
+            // This API filters by skin tone, gender, and occasion
+            try {
+                const suggestionsRes = await getSmartSuggestions({ limit: 6 });
+                setSmartSuggestions(suggestionsRes.data || []);
+                setSuggestionFilters(suggestionsRes.meta?.filters || null);
+                console.log('Smart Suggestions loaded:', suggestionsRes);
+            } catch (suggestionError) {
+                console.warn('Could not load smart suggestions:', suggestionError);
+                setSmartSuggestions([]);
+            }
 
             // Load favorites
             const favoritesRes = await getFavorites().catch(() => ({ favorites: [] }));
             setFavoriteCount(favoritesRes.favorites.length);
-
-            // Show only first 3 favorites as preview
             setFavoriteSuggestions(favoritesRes.favorites.slice(0, 3));
         } catch (error) {
             console.error('Error loading data:', error);
@@ -91,10 +65,6 @@ export default function StylerDashboard() {
         }
     };
 
-=======
-
-export default function StylerDashboard() {
->>>>>>> origin/main
     return (
         <ProtectedRoute allowedRoles={['styler']}>
             <div className="flex min-h-screen bg-gray-50">
@@ -102,166 +72,226 @@ export default function StylerDashboard() {
 
                 <main className="flex-1 p-8">
                     <div className="max-w-7xl mx-auto">
-<<<<<<< HEAD
                         {/* Header */}
-=======
->>>>>>> origin/main
                         <div className="mb-8">
-                            <h1 className="text-3xl font-bold text-gray-900">Styler Dashboard</h1>
-                            <p className="mt-2 text-gray-600">
-                                Manage your wardrobe and discover perfect outfits
-                            </p>
-                        </div>
-<<<<<<< HEAD
-
-                        {/* Stats Grid */}
-                        <div className="grid gap-6 md:grid-cols-3 mb-8 items-stretch">
-                            <Card className="flex flex-col min-h-[140px]">
-                                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-gray-600">
-                                        Total Clothes
-                                    </CardTitle>
-                                    <Package className="h-4 w-4 text-gray-600" />
-                                </CardHeader>
-                                <CardContent className="flex-1 flex flex-col justify-center">
-                                    <div className="text-2xl font-bold">{myClothes.length}</div>
-                                    <p className="text-xs text-gray-500 mt-1">Items in wardrobe</p>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="flex flex-col min-h-[140px]">
-                                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-gray-600">
-                                        Suggestions
-                                    </CardTitle>
-                                    <Sparkles className="h-4 w-4 text-gray-600" />
-                                </CardHeader>
-                                <CardContent className="flex-1 flex flex-col justify-center">
-                                    <div className="text-2xl font-bold">{suggestions.length}</div>
-                                    <p className="text-xs text-gray-500 mt-1">Smart matches</p>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="flex flex-col min-h-[140px]">
-                                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardTitle className="text-sm font-medium text-gray-600">
-                                        Favorites
-                                    </CardTitle>
-                                    <Heart className="h-4 w-4 text-gray-600" />
-                                </CardHeader>
-                                <CardContent className="flex-1 flex flex-col justify-center">
-                                    <div className="text-2xl font-bold">{favoriteCount}</div>
-                                    <p className="text-xs text-gray-500 mt-1">Favorite items</p>
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* Favourite Suggestions Section */}
-                        <Card className="mb-8 flex flex-col">
-                            <CardHeader className="flex flex-row items-center justify-between">
+                            <div className="flex items-center justify-between">
                                 <div>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Heart className="h-5 w-5 text-[#e2c2b7]" />
-                                        Favourite Suggestions
-                                    </CardTitle>
-                                    <CardDescription>Your favorited dresses from partner shops</CardDescription>
+                                    <h1 className="text-3xl font-bold text-gray-900">Styler Dashboard</h1>
+                                    <p className="mt-2 text-gray-600">
+                                        Manage your wardrobe and get personalized suggestions
+                                    </p>
                                 </div>
-                                <Link href="/styler/suggestions">
-                                    <Button variant="outline" className="flex items-center gap-2">
-                                        View All
-                                        <ArrowRight className="h-4 w-4" />
+                                <Link href="/styler/clothes/add">
+                                    <Button className="flex items-center gap-2 bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900">
+                                        <Plus className="h-4 w-4" />
+                                        Add New Clothes
                                     </Button>
                                 </Link>
-                            </CardHeader>
-                            <CardContent className="flex-1">
-                                {loading ? (
-                                    <div className="text-center py-8">
-                                        <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-current border-r-transparent"></div>
-                                        <p className="mt-2 text-sm text-gray-500">Loading favorites...</p>
-                                    </div>
-                                ) : favoriteSuggestions.length === 0 ? (
-                                    <div className="text-center py-8 text-gray-500">
-                                        <p>No favorites yet. Browse dress suggestions and add your favorites!</p>
-                                    </div>
-                                ) : (
-                                    <div className="grid gap-4 md:grid-cols-3">
-                                        {favoriteSuggestions.map((item) => (
-                                            <Card key={item._id || item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-                                                <div className="aspect-[3/4] bg-gradient-to-br from-[#e2c2b7] to-[#d4b5a8] flex items-center justify-center relative">
-                                                    {item.image ? (
-                                                        <img
-                                                            src={item.image}
-                                                            alt={item.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    ) : (
-                                                        <Package className="h-16 w-16 text-white opacity-50" />
-                                                    )}
-                                                    <div className="absolute top-2 right-2">
-                                                        <Heart className="h-5 w-5 text-red-500 fill-current" />
-                                                    </div>
-                                                </div>
-                                                <CardContent className="p-4 flex-1 flex flex-col">
-                                                    <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
-                                                    <p className="text-sm text-gray-600 mt-1 capitalize">{item.color} • {item.category}</p>
-                                                    {item.brand && (
-                                                        <p className="text-xs text-gray-500 mt-1">Brand: {item.brand}</p>
-                                                    )}
-                                                    {item.price && (
-                                                        <p className="text-sm font-bold text-[#e2c2b7] mt-2">${item.price.toFixed(2)}</p>
-                                                    )}
-                                                    <div className="flex items-center justify-between mt-auto pt-3">
-                                                        <span className="text-sm text-gray-600">Partner shop</span>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="ghost"
-                                                            onClick={() => router.push(`/styler/suggestions/${item._id || item.id}`)}
-                                                        >
-                                                            View
-                                                        </Button>
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
-                        {/* Quick Actions */}
-                        <Card className="flex flex-col">
-                            <CardHeader>
-                                <CardTitle>Quick Actions</CardTitle>
-                                <CardDescription>Manage your wardrobe</CardDescription>
-                            </CardHeader>
-                            <CardContent className="flex-1">
-                                <div className="flex flex-wrap gap-4">
-                                    <Link href="/styler/clothes/add">
-                                        <Button className="flex items-center gap-2 bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900">
-                                            <Plus className="h-4 w-4" />
-                                            Add New Clothes
-                                        </Button>
-                                    </Link>
-                                    <Link href="/styler/clothes">
-                                        <Button variant="outline">View All Clothes</Button>
-                                    </Link>
-                                    <Link href="/styler/suggestions">
-                                        <Button variant="outline" className="flex items-center gap-2">
-                                            <Sparkles className="h-4 w-4" />
-                                            Browse Suggestions
-                                        </Button>
-                                    </Link>
-                                    <Link href="/styler/matching">
-                                        <Button variant="outline" className="flex items-center gap-2">
-                                            <Shirt className="h-4 w-4" />
-                                            Create Outfit
+                        {/* Stats Grid */}
+                        <div className="grid gap-6 md:grid-cols-2 mb-8">
+                            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-purple-900">
+                                        Total Clothes
+                                    </CardTitle>
+                                    <Package className="h-5 w-5 text-purple-600" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-3xl font-bold text-purple-900">{totalClothesCount}</div>
+                                    <p className="text-xs text-purple-700 mt-1">Items in your wardrobe</p>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
+                                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                    <CardTitle className="text-sm font-medium text-pink-900">
+                                        Favorites
+                                    </CardTitle>
+                                    <Heart className="h-5 w-5 text-pink-600" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-3xl font-bold text-pink-900">{favoriteCount}</div>
+                                    <p className="text-xs text-pink-700 mt-1">Saved items</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Smart Dress Suggestions - Based on your skin tone, gender, and occasions */}
+                        {smartSuggestions.length > 0 && (
+                            <div className="mb-8">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                            <Sparkles className="h-5 w-5 text-[#e2c2b7]" />
+                                            Smart Suggestions
+                                        </h2>
+                                        {suggestionFilters && (
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Based on: {suggestionFilters.occasion && `${suggestionFilters.occasion} occasion`}
+                                                {suggestionFilters.gender && ` • ${suggestionFilters.gender}`}
+                                                {suggestionFilters.skinTone && ` • ${suggestionFilters.skinTone} skin tone`}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <Link href="/styler/occasions">
+                                        <Button variant="ghost" className="text-[#e2c2b7] hover:text-[#d4b5a8]">
+                                            View Occasions <ArrowRight className="ml-2 h-4 w-4" />
                                         </Button>
                                     </Link>
                                 </div>
-                            </CardContent>
-                        </Card>
-=======
->>>>>>> origin/main
+                                <div className="grid gap-6 md:grid-cols-3">
+                                    {smartSuggestions.slice(0, 6).map((item: SmartSuggestion) => (
+                                        <Card key={item._id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
+                                            <div className="h-48 bg-gray-100 relative">
+                                                {item.image ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Shirt className="h-12 w-12 text-gray-300" />
+                                                    </div>
+                                                )}
+                                                {item.price && (
+                                                    <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-bold text-[#e2c2b7]">
+                                                        ${item.price}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <CardContent className="p-4">
+                                                <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                                                <p className="text-sm text-gray-500 capitalize">{item.category} • {item.color}</p>
+                                                {item.occasion && (
+                                                    <span className="inline-block mt-2 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full capitalize">
+                                                        {item.occasion}
+                                                    </span>
+                                                )}
+                                                {/* Match Reason */}
+                                                <p className="mt-2 text-xs text-[#e2c2b7] font-medium flex items-center gap-1">
+                                                    <Sparkles className="h-3 w-3" />
+                                                    {item.matchReason}
+                                                </p>
+                                                {/* Partner Shop Info */}
+                                                {item.partner && (
+                                                    <div className="mt-3 pt-3 border-t border-gray-100">
+                                                        <p className="text-xs text-gray-600 flex items-center gap-1">
+                                                            <Store className="h-3 w-3" />
+                                                            {item.partner.name} • {item.partner.location}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* My Wardrobe Preview */}
+                        <div className="mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                    <Package className="h-5 w-5 text-[#e2c2b7]" />
+                                    My Wardrobe
+                                </h2>
+                                <Link href="/styler/clothes">
+                                    <Button variant="ghost" className="text-[#e2c2b7] hover:text-[#d4b5a8]">
+                                        View All <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </Link>
+                            </div>
+                            {loading ? (
+                                <div className="text-center py-12">
+                                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
+                                    <p className="mt-4 text-gray-600">Loading wardrobe...</p>
+                                </div>
+                            ) : myClothes.length === 0 ? (
+                                <Card className="p-8 text-center bg-gray-50 border-dashed">
+                                    <div className="flex flex-col items-center justify-center">
+                                        <Package className="h-12 w-12 text-gray-400 mb-4" />
+                                        <h3 className="text-lg font-medium text-gray-900">Your wardrobe is empty</h3>
+                                        <p className="text-gray-500 mb-4">Start adding clothes to get personalized suggestions</p>
+                                        <Link href="/styler/clothes/add">
+                                            <Button className="bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900">
+                                                Add First Item
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </Card>
+                            ) : (
+                                <div className="grid gap-6 md:grid-cols-4">
+                                    {myClothes.slice(0, 4).map((item) => (
+                                        <Card key={item._id || item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
+                                            <div className="h-48 bg-gray-100 relative">
+                                                {item.image ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Shirt className="h-12 w-12 text-gray-300" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <CardContent className="p-4">
+                                                <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
+                                                <p className="text-sm text-gray-500 capitalize">{item.category}</p>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Favorite Suggestions */}
+                        {favoriteSuggestions.length > 0 && (
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                        <Heart className="h-5 w-5 text-[#e2c2b7]" />
+                                        Favorite Suggestions
+                                    </h2>
+                                </div>
+                                <div className="grid gap-6 md:grid-cols-3">
+                                    {favoriteSuggestions.map((item) => (
+                                        <Card key={item._id || item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300">
+                                            <div className="h-48 bg-gray-100 relative">
+                                                {item.image ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Shirt className="h-12 w-12 text-gray-300" />
+                                                    </div>
+                                                )}
+                                                <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-bold text-[#e2c2b7]">
+                                                    ${item.price}
+                                                </div>
+                                            </div>
+                                            <CardContent className="p-4">
+                                                <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                                                <p className="text-sm text-gray-500 capitalize">{item.brand}</p>
+                                                <div className="mt-2 flex items-center justify-between">
+                                                    <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                                                        {item.category}
+                                                    </span>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
