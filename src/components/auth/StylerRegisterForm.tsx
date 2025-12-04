@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface StylerRegisterFormValues {
   fullName: string;
@@ -13,7 +14,11 @@ interface StylerRegisterFormValues {
   phone: string;
   address: string;
   password: string;
+  gender: string;
+  dateOfBirth: string;
 }
+
+const genders = ['male', 'female', 'unisex'] as const;
 
 interface StylerRegisterFormProps {
   onSuccess?: () => void;
@@ -22,8 +27,25 @@ interface StylerRegisterFormProps {
 
 export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegisterFormProps) {
   const { register: registerUser, loading } = useAuth();
-  const { register, handleSubmit } = useForm<StylerRegisterFormValues>();
+  const { register, handleSubmit, watch, setValue } = useForm<StylerRegisterFormValues>();
   const [error, setError] = useState('');
+
+  const dateOfBirth = watch('dateOfBirth');
+
+  // Calculate age from date of birth
+  const calculateAge = (dob: string): number | null => {
+    if (!dob) return null;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = calculateAge(dateOfBirth);
 
   const onSubmit = async (data: StylerRegisterFormValues) => {
     setError('');
@@ -31,7 +53,10 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
       await registerUser(data.email, data.password, 'styler', {
         fullName: data.fullName,
         phone: data.phone,
-        address: data.address
+        address: data.address,
+        gender: data.gender,
+        dateOfBirth: data.dateOfBirth,
+        age: age || undefined
       });
 
       setTimeout(() => {
@@ -102,6 +127,38 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
             required
             className="mt-1"
           />
+        </div>
+
+        <div>
+          <Label htmlFor="gender">Gender</Label>
+          <Select onValueChange={(value) => setValue('gender', value)}>
+            <SelectTrigger className="mt-1 w-full">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              {genders.map((gender) => (
+                <SelectItem key={gender} value={gender}>
+                  {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="dateOfBirth">Date of Birth</Label>
+          <Input
+            {...register('dateOfBirth')}
+            id="dateOfBirth"
+            type="date"
+            className="mt-1"
+            max={new Date().toISOString().split('T')[0]}
+          />
+          {age !== null && (
+            <p className="text-sm text-gray-600 mt-1">
+              Age: <span className="font-semibold">{age} years old</span>
+            </p>
+          )}
         </div>
 
         {error && (
