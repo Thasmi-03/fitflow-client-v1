@@ -16,8 +16,11 @@ import { addPartnerClothes } from '@/lib/api/partner-clothes';
 import { toast } from 'sonner';
 import { Category, Color } from '@/types/clothes';
 
-const categories: Category[] = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'Frock', 'blazer', 'sweater', 'coat', 'Tshirt'];
-const colors: Color[] = ['red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'brown', 'pink', 'purple', 'orange', 'beige', 'navy', 'maroon', 'teal', 'coral', 'multi'];
+const categories: Category[] = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'Frock', 'blazer', 'sweater', 'coat', 'Tshirt', 'saree', 'kurta', 'lehenga'];
+const colors: Color[] = ['red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'brown', 'pink', 'purple', 'orange', 'beige', 'navy', 'maroon', 'teal', 'coral', 'multi', 'gold', 'silver'];
+const occasions = ['casual', 'formal', 'business', 'party', 'wedding', 'sports', 'beach'];
+const genders = ['male', 'female', 'unisex'];
+const skinTones = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
 
 export default function AddPartnerClothesPage() {
     const router = useRouter();
@@ -33,6 +36,9 @@ export default function AddPartnerClothesPage() {
         imageUrl: '',
         size: '',
         visibility: 'public',
+        occasion: 'casual',
+        gender: 'unisex',
+        suitableSkinTones: [] as string[],
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -72,7 +78,11 @@ export default function AddPartnerClothesPage() {
                 image: formData.imageUrl || undefined,
                 size: formData.size,
                 visibility: formData.visibility as 'public' | 'private',
-            });
+                // Important for suggestions!
+                occasion: formData.occasion,
+                gender: formData.gender,
+                suitableSkinTones: formData.suitableSkinTones,
+            } as any); // Type assertion to allow extra fields
 
             toast.success('Product added successfully!');
             router.push('/partner/clothes');
