@@ -43,7 +43,7 @@ export default function AdminDashboard() {
 
             try {
                 pendingData = await getPendingUsers();
-                setPendingCount(pendingData.count);
+                setPendingCount(pendingData.users.length);
             } catch (pendingError) {
                 console.log('Pending users endpoint error, using fallback');
                 setPendingCount(0);
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-3xl font-bold text-green-600">
-                                        ${analytics?.totalRevenue.toFixed(2) || '0.00'}
+                                        ${analytics?.totalRevenue?.toFixed(2) || '0.00'}
                                     </div>
                                     <p className="text-xs text-gray-500 mt-1">All-time revenue</p>
                                 </CardContent>

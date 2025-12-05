@@ -11,12 +11,14 @@ export interface UserProfile {
     createdAt: string;
     updatedAt: string;
     favorites?: string[];
+    profilePhoto?: string;
 }
 
 export interface UpdateProfileInput {
     name?: string;
     location?: string;
     phone?: string;
+    profilePhoto?: string;
 }
 
 export const getMyProfile = async (): Promise<UserProfile> => {

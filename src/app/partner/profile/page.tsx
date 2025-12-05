@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { getMyProfile, updateMyProfile, UserProfile } from '@/lib/api/user';
+import ImageUploader from '@/components/ImageUploader';
 
 export default function PartnerProfilePage() {
     const { user } = useAuth();
@@ -21,7 +22,8 @@ export default function PartnerProfilePage() {
     const [shopDetails, setShopDetails] = useState({
         name: '',
         phone: '',
-        location: ''
+        location: '',
+        profilePhoto: ''
     });
 
     useEffect(() => {
@@ -36,7 +38,8 @@ export default function PartnerProfilePage() {
             setShopDetails({
                 name: data.name || '',
                 phone: data.phone || '',
-                location: data.location || ''
+                location: data.location || '',
+                profilePhoto: data.profilePhoto || ''
             });
         } catch (error) {
             console.error('Error loading profile:', error);
@@ -54,6 +57,7 @@ export default function PartnerProfilePage() {
             await updateMyProfile(shopDetails);
             toast.success('Profile updated successfully!');
             loadProfile(); // Reload to get updated data
+            window.location.reload(); // Force reload to update sidebar
         } catch (error) {
             console.error('Error updating profile:', error);
             toast.error('Failed to update profile');
@@ -143,6 +147,25 @@ export default function PartnerProfilePage() {
                                 </CardHeader>
                                 <CardContent>
                                     <form onSubmit={handleSave} className="space-y-4">
+                                        <div className="flex justify-center mb-6">
+                                            <div className="w-32">
+                                                <Label className="mb-2 block text-center">Shop Logo / Photo</Label>
+                                                <div className="flex flex-col items-center gap-2">
+                                                    {shopDetails.profilePhoto && (
+                                                        <img
+                                                            src={shopDetails.profilePhoto}
+                                                            alt="Profile"
+                                                            className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                                                        />
+                                                    )}
+                                                    <ImageUploader
+                                                        useCloudinaryDirect={true}
+                                                        onUploadComplete={(url) => setShopDetails({ ...shopDetails, profilePhoto: url })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div>
                                             <Label htmlFor="name" className="flex items-center gap-2">
                                                 <Store className="h-4 w-4" />

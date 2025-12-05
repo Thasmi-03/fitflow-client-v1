@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { User, Mail, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SkinTone } from '@/types/clothes';
+import ImageUploader from '@/components/ImageUploader';
+import { updateProfile } from '@/lib/api/auth';
 
 const skinTones: SkinTone[] = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
 
@@ -23,9 +25,23 @@ export default function ProfileSettingsPage() {
     const [formData, setFormData] = useState({
         name: user?.name || '',
         email: user?.email || '',
-        skinTone: 'medium' as SkinTone,
-        preferredStyle: '',
+        skinTone: (user?.skinTone as SkinTone) || 'medium',
+        preferredStyle: user?.preferredStyle || '',
+        profilePhoto: user?.profilePhoto || '',
     });
+
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                name: user.name || prev.name,
+                email: user.email || prev.email,
+                skinTone: (user.skinTone as SkinTone) || prev.skinTone,
+                preferredStyle: user.preferredStyle || prev.preferredStyle,
+                profilePhoto: user.profilePhoto || prev.profilePhoto,
+            }));
+        }
+    }, [user]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -46,11 +62,18 @@ export default function ProfileSettingsPage() {
         setLoading(true);
 
         try {
-            // TODO: Implement API call to update profile
-            // await updateProfile(formData);
+            await updateProfile({
+                name: formData.name,
+                // email cannot be updated directly usually
+                profilePhoto: formData.profilePhoto,
+                skinTone: formData.skinTone,
+                preferredStyle: formData.preferredStyle,
+            } as any);
 
             toast.success('Profile updated successfully!');
             setIsEditing(false);
+            // Ideally reload user context here, but page reload works too for now
+            window.location.reload();
         } catch (error: any) {
             console.error('Error updating profile:', error);
             toast.error('Failed to update profile');
@@ -95,6 +118,25 @@ export default function ProfileSettingsPage() {
                             <CardContent>
                                 {isEditing ? (
                                     <form onSubmit={handleSubmit} className="space-y-6">
+                                        <div className="flex justify-center mb-6">
+                                            <div className="w-32">
+                                                <Label className="mb-2 block text-center">Profile Photo</Label>
+                                                <div className="flex flex-col items-center gap-2">
+                                                    {formData.profilePhoto && (
+                                                        <img
+                                                            src={formData.profilePhoto}
+                                                            alt="Profile"
+                                                            className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                                                        />
+                                                    )}
+                                                    <ImageUploader
+                                                        useCloudinaryDirect={false}
+                                                        onUploadComplete={(url) => setFormData({ ...formData, profilePhoto: url })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div className="grid gap-6 md:grid-cols-2">
                                             <div>
                                                 <Label htmlFor="name">Full Name</Label>

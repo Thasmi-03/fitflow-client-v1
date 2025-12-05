@@ -5,9 +5,13 @@ export interface User {
     email: string;
     role: Role;
     fullName?: string;
+    name?: string;
     phone?: string;
     address?: string;
     isApproved: boolean;
+    profilePhoto?: string;
+    skinTone?: string;
+    preferredStyle?: string;
     createdAt?: string;
     updatedAt?: string;
 }

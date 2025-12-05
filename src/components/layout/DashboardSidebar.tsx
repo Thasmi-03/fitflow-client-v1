@@ -154,11 +154,24 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-xl font-bold text-gray-900 capitalize">
+                    <div className="p-6 border-b border-gray-200 flex flex-col items-center">
+                        <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-200 mb-3 border-2 border-gray-100">
+                            {user?.profilePhoto ? (
+                                <img
+                                    src={user.profilePhoto}
+                                    alt="Profile"
+                                    className="h-full w-full object-cover"
+                                />
+                            ) : (
+                                <div className="h-full w-full flex items-center justify-center text-gray-400">
+                                    <User className="h-10 w-10" />
+                                </div>
+                            )}
+                        </div>
+                        <h2 className="text-xl font-bold text-gray-900 capitalize text-center">
                             {role} Dashboard
                         </h2>
-                        <p className="text-sm text-gray-600 mt-1">{user?.email}</p>
+                        <p className="text-sm text-gray-600 mt-1 text-center">{user?.email}</p>
                     </div>
 
                     {/* Navigation */}

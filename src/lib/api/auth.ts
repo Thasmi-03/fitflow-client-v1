@@ -32,4 +32,12 @@ export const getProfile = async (): Promise<{ user: User }> => {
     return response.data;
 };
 
+/**
+ * Update current user profile
+ */
+export const updateProfile = async (data: Partial<User>): Promise<{ message: string; user: User }> => {
+    const response = await apiClient.put<{ message: string; user: User }>('/api/users/profile', data);
+    return response.data;
+};
+
 
