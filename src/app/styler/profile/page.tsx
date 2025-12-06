@@ -21,6 +21,7 @@ export default function ProfileSettingsPage() {
     const { user } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -131,7 +132,12 @@ export default function ProfileSettingsPage() {
                                                     )}
                                                     <ImageUploader
                                                         useCloudinaryDirect={false}
-                                                        onUploadComplete={(url) => setFormData({ ...formData, profilePhoto: url })}
+                                                        autoUpload={true}
+                                                        onUploadStart={() => setIsUploadingPhoto(true)}
+                                                        onUploadComplete={(url) => {
+                                                            setFormData({ ...formData, profilePhoto: url });
+                                                            setIsUploadingPhoto(false);
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -197,8 +203,8 @@ export default function ProfileSettingsPage() {
                                         </div>
 
                                         <div className="flex gap-4">
-                                            <Button type="submit" disabled={loading} className="flex-1">
-                                                {loading ? 'Saving...' : 'Save Changes'}
+                                            <Button type="submit" disabled={loading || isUploadingPhoto} className="flex-1">
+                                                {loading || isUploadingPhoto ? (isUploadingPhoto ? 'Uploading Photo...' : 'Saving...') : 'Save Changes'}
                                             </Button>
                                             <Button
                                                 type="button"

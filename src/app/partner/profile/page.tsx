@@ -17,6 +17,7 @@ export default function PartnerProfilePage() {
     const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
     const [shopDetails, setShopDetails] = useState({
@@ -160,7 +161,12 @@ export default function PartnerProfilePage() {
                                                     )}
                                                     <ImageUploader
                                                         useCloudinaryDirect={true}
-                                                        onUploadComplete={(url) => setShopDetails({ ...shopDetails, profilePhoto: url })}
+                                                        autoUpload={true}
+                                                        onUploadStart={() => setIsUploadingPhoto(true)}
+                                                        onUploadComplete={(url) => {
+                                                            setShopDetails({ ...shopDetails, profilePhoto: url });
+                                                            setIsUploadingPhoto(false);
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -223,13 +229,13 @@ export default function PartnerProfilePage() {
                                         <div className="pt-4">
                                             <Button
                                                 type="submit"
-                                                disabled={saving}
+                                                disabled={saving || isUploadingPhoto}
                                                 className="w-full md:w-auto bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900"
                                             >
-                                                {saving ? (
+                                                {saving || isUploadingPhoto ? (
                                                     <>
                                                         <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent mr-2"></div>
-                                                        Saving...
+                                                        {isUploadingPhoto ? 'Uploading Photo...' : 'Saving...'}
                                                     </>
                                                 ) : (
                                                     <>

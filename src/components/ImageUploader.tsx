@@ -7,10 +7,17 @@ const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESE
 
 interface ImageUploaderProps {
   onUploadComplete?: (imageUrl: string) => void;
+  onUploadStart?: () => void;
   useCloudinaryDirect?: boolean;
+  autoUpload?: boolean;
 }
 
-export default function ImageUploader({ onUploadComplete, useCloudinaryDirect = false }: ImageUploaderProps) {
+export default function ImageUploader({
+  onUploadComplete,
+  onUploadStart,
+  useCloudinaryDirect = false,
+  autoUpload = true
+}: ImageUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -21,18 +28,23 @@ export default function ImageUploader({ onUploadComplete, useCloudinaryDirect = 
     if (!f) return;
     setFile(f);
     setPreview(URL.createObjectURL(f));
+
+    if (autoUpload) {
+      handleUpload(f);
+    }
   };
 
   // Upload directly to Cloudinary (client-side)
-  const uploadToCloudinary = async () => {
-    if (!file) return alert("Choose an image first");
+  const uploadToCloudinary = async (fileToUpload: File) => {
     if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
       return alert("Cloudinary not configured");
     }
 
     setUploading(true);
+    onUploadStart?.();
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", fileToUpload);
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
@@ -56,38 +68,46 @@ export default function ImageUploader({ onUploadComplete, useCloudinaryDirect = 
   };
 
   // Upload via backend API
-  const uploadViaBackend = async () => {
-    if (!file) return alert("Choose an image first");
+  const uploadViaBackend = async (fileToUpload: File) => {
     setUploading(true);
+    onUploadStart?.();
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("image", fileToUpload);
 
     try {
       const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
+
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || data.details || data.error || "Upload failed");
+      }
+
       if (data.success) {
         setImageUrl(data.imageUrl);
         onUploadComplete?.(data.imageUrl);
       } else {
-        alert("Upload failed");
+        throw new Error(data.message || data.error || "Upload failed");
       }
-    } catch (err) {
-      console.error(err);
-      alert("Upload error");
+    } catch (err: any) {
+      console.error("Upload error details:", err);
+      alert(`Upload error: ${err.message || "Unknown error"}`);
     } finally {
       setUploading(false);
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = (fileToUpload: File = file!) => {
+    if (!fileToUpload) return alert("Choose an image first");
+
     if (useCloudinaryDirect && CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET) {
-      uploadToCloudinary();
+      uploadToCloudinary(fileToUpload);
     } else {
-      uploadViaBackend();
+      uploadViaBackend(fileToUpload);
     }
   };
 
@@ -95,16 +115,23 @@ export default function ImageUploader({ onUploadComplete, useCloudinaryDirect = 
     <div>
       <input type="file" accept="image/*" onChange={onFileChange} />
       {preview && (
-        <div>
+        <div className="mt-2">
           <img src={preview} alt="preview" style={{ width: 150, height: "auto" }} />
         </div>
       )}
-      <button onClick={handleUpload} disabled={uploading}>
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
 
-      {imageUrl && (
-        <div>
+      {!autoUpload && (
+        <button onClick={() => handleUpload()} disabled={uploading} className="mt-2">
+          {uploading ? "Uploading..." : "Upload"}
+        </button>
+      )}
+
+      {uploading && autoUpload && (
+        <div className="mt-2 text-sm text-gray-500">Uploading...</div>
+      )}
+
+      {imageUrl && !autoUpload && (
+        <div className="mt-2">
           <p>Uploaded image:</p>
           <img src={imageUrl} alt="uploaded" style={{ width: 200 }} />
         </div>

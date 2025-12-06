@@ -17,6 +17,7 @@ export default function AdminProfilePage() {
     const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
     const [formData, setFormData] = useState({
@@ -156,7 +157,12 @@ export default function AdminProfilePage() {
                                                     )}
                                                     <ImageUploader
                                                         useCloudinaryDirect={true}
-                                                        onUploadComplete={(url) => setFormData({ ...formData, profilePhoto: url })}
+                                                        autoUpload={true}
+                                                        onUploadStart={() => setIsUploadingPhoto(true)}
+                                                        onUploadComplete={(url) => {
+                                                            setFormData({ ...formData, profilePhoto: url });
+                                                            setIsUploadingPhoto(false);
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -177,13 +183,13 @@ export default function AdminProfilePage() {
                                         <div className="pt-4">
                                             <Button
                                                 type="submit"
-                                                disabled={saving}
+                                                disabled={saving || isUploadingPhoto}
                                                 className="w-full md:w-auto"
                                             >
-                                                {saving ? (
+                                                {saving || isUploadingPhoto ? (
                                                     <>
                                                         <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent mr-2"></div>
-                                                        Saving...
+                                                        {isUploadingPhoto ? 'Uploading Photo...' : 'Saving...'}
                                                     </>
                                                 ) : (
                                                     <>
