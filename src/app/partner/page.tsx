@@ -44,7 +44,7 @@ export default function PartnerDashboard() {
     const loadOrders = async () => {
         try {
             const response = await ordersService.getAll();
-            setOrders(response.data);
+            setOrders(response.data || []);
         } catch (error) {
             console.error('Error loading orders:', error);
         }
@@ -254,7 +254,7 @@ export default function PartnerDashboard() {
                                                     <div className="flex-1">
                                                         <p className="font-medium text-gray-900">Order #{order._id.slice(-6)}</p>
                                                         <p className="text-sm text-gray-600">
-                                                            {new Date(order.createdAt).toLocaleDateString()} • {order.items.length} items
+                                                            {new Date(order.createdAt).toLocaleDateString()} • {order.items?.length || 0} items
                                                         </p>
                                                     </div>
                                                     <div className="text-right">
@@ -270,9 +270,9 @@ export default function PartnerDashboard() {
                                             ))
                                         )}
                                     </div>
-                                    <Link href="/partner/orders">
+                                    {/* <Link href="/partner/orders">
                                         <Button variant="outline" className="w-full mt-4">View All Orders</Button>
-                                    </Link>
+                                    </Link> */}
                                 </CardContent>
                             </Card>
 
@@ -302,7 +302,7 @@ export default function PartnerDashboard() {
                                                 </div>
                                             </Button>
                                         </Link>
-                                        <Link href="/partner/analytics" className="block">
+                                        {/* <Link href="/partner/analytics" className="block">
                                             <Button variant="outline" className="w-full flex items-center justify-start gap-3 h-auto py-4">
                                                 <BarChart3 className="h-5 w-5" />
                                                 <div className="text-left">
@@ -319,7 +319,7 @@ export default function PartnerDashboard() {
                                                     <div className="text-xs opacity-80">Process customer orders</div>
                                                 </div>
                                             </Button>
-                                        </Link>
+                                        </Link> */}
                                     </div>
                                 </CardContent>
                             </Card>
