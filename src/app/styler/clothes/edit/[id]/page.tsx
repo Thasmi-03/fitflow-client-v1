@@ -50,7 +50,7 @@ export default function EditClothesPage() {
         try {
             setFetching(true);
             const response = await clothesService.getById(id);
-            const item = response.clothes;
+            const item = response.cloth;
 
             // Check if item exists
             if (!item) {

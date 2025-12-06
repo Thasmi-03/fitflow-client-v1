@@ -7,15 +7,24 @@ export const clothesService = {
         return response.data;
     },
     getById: async (id: string) => {
-        const response = await apiClient.get<{ clothes: Cloth }>(`/stylerclothes/${id}`);
-        return response.data;
+        const response = await apiClient.get<any>(`/stylerclothes/${id}`);
+
+        // Handle both formats: { cloth: ... } (new) and raw object (old/production)
+        if (response.data && response.data.cloth) {
+            return { cloth: response.data.cloth };
+        } else if (response.data && response.data.clothes) {
+            return { cloth: response.data.clothes };
+        } else {
+            // Assume the entire response is the cloth object
+            return { cloth: response.data };
+        }
     },
     create: async (data: CreateClothInput) => {
-        const response = await apiClient.post<{ clothes: Cloth }>("/stylerclothes", data);
+        const response = await apiClient.post<{ cloth: Cloth }>("/stylerclothes", data);
         return response.data;
     },
     update: async (id: string, data: UpdateClothInput) => {
-        const response = await apiClient.put<{ clothes: Cloth }>(`/stylerclothes/${id}`, data);
+        const response = await apiClient.put<{ cloth: Cloth }>(`/stylerclothes/${id}`, data);
         return response.data;
     },
     delete: async (id: string) => {
