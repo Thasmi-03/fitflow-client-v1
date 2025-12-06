@@ -10,6 +10,7 @@ import { Role } from '@/types/auth';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { toast } from 'sonner';
 
 const registerSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
@@ -34,7 +35,6 @@ interface RegisterFormProps {
 export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin }: RegisterFormProps = {}) {
   const { login, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
 
   const {
     register,
@@ -59,7 +59,6 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
   }, [setValue, isPartnerPage]);
 
   const onSubmit = async (data: RegisterFormValues) => {
-    setError('');
     try {
       const registerData = {
         email: data.email,
@@ -74,6 +73,8 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
 
       const response = await authService.register(registerData);
 
+      toast.success('Registration successful!');
+
       if (response.token && response.user) {
         await login(response.token, response.user);
       } else if (data.role === 'partner') {
@@ -84,7 +85,11 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
       if (onSuccess) onSuccess();
     } catch (err: any) {
       console.error('Registration error:', err);
-      setError(err?.response?.data?.error || err.message || 'Registration failed');
+      const errorMessage = err?.response?.data?.error || err.message || 'Registration failed';
+      toast.error(errorMessage, {
+        duration: Infinity,
+        closeButton: true,
+      });
     }
   };
 
@@ -184,11 +189,6 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
               {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth.message}</p>}
             </div>
           </>
-        )}
-        {error && (
-          <div className="p-3 rounded-md bg-red-50 border border-red-200">
-            <p className="text-red-600 text-sm font-medium">{error}</p>
-          </div>
         )}
 
         <input {...register('role')} type="hidden" value="partner" />

@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { toast } from 'sonner';
 
 interface StylerRegisterFormValues {
   fullName: string;
@@ -29,7 +30,6 @@ interface StylerRegisterFormProps {
 export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegisterFormProps) {
   const { login, loading } = useAuth();
   const { register, handleSubmit, watch, setValue } = useForm<StylerRegisterFormValues>();
-  const [error, setError] = useState('');
 
   const dateOfBirth = watch('dateOfBirth');
 
@@ -49,7 +49,6 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
   const age = calculateAge(dateOfBirth);
 
   const onSubmit = async (data: StylerRegisterFormValues) => {
-    setError('');
     try {
       const response = await authService.register({
         email: data.email,
@@ -63,6 +62,8 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
         age: age || undefined
       });
 
+      toast.success('Registration successful!');
+
       if (response.token && response.user) {
         await login(response.token, response.user);
       }
@@ -72,7 +73,11 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
       }, 100);
     } catch (err: any) {
       console.error('Styler register error:', err);
-      setError(err?.response?.data?.error || err.message || 'Registration failed');
+      const errorMessage = err?.response?.data?.error || err.message || 'Registration failed';
+      toast.error(errorMessage, {
+        duration: Infinity,
+        closeButton: true,
+      });
     }
   };
 
@@ -168,12 +173,6 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
             </p>
           )}
         </div>
-
-        {error && (
-          <div className="p-3 rounded-md bg-red-50 border border-red-200">
-            <p className="text-red-600 text-sm font-medium">{error}</p>
-          </div>
-        )}
 
         <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Signing up...' : 'Sign Up'}
