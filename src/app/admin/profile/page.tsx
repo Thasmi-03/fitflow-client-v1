@@ -10,11 +10,12 @@ import { User, Mail, Shield, Save } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { getMyProfile, updateMyProfile, UserProfile } from '@/lib/api/user';
+import { userService } from '@/services/user.service';
+import { UserProfile } from '@/types/user';
 import ImageUploader from '@/components/ImageUploader';
 
 export default function AdminProfilePage() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -32,7 +33,12 @@ export default function AdminProfilePage() {
     const loadProfile = async () => {
         try {
             setLoading(true);
-            const data = await getMyProfile();
+            const response = await userService.getMyProfile();
+            // Handle response structure: { success: true, user: { ... } } or just user object depending on backend
+            // Based on authService.getCurrentUser, it returns response.data
+            // Assuming backend returns { success: true, user: ... } or just user
+            const data = response.user || response;
+
             setProfile(data);
             setFormData({
                 name: data.name || '',
@@ -51,10 +57,10 @@ export default function AdminProfilePage() {
         setSaving(true);
 
         try {
-            await updateMyProfile(formData);
+            await userService.updateMyProfile(formData);
             toast.success('Profile updated successfully!');
-            loadProfile(); // Reload to get updated data
-            window.location.reload(); // Force reload to update sidebar
+            await refreshUser(); // Update context
+            loadProfile(); // Reload local state
         } catch (error) {
             console.error('Error updating profile:', error);
             toast.error('Failed to update profile');

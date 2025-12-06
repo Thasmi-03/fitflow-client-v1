@@ -18,8 +18,9 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
 
         if (!loading) {
+            console.log("ProtectedRoute: Checking access. User:", user, "AllowedRoles:", allowedRoles);
             if (!user) {
-
+                console.log("ProtectedRoute: No user found. Redirecting to login.");
                 router.push('/auth/login');
                 return;
             }
@@ -30,6 +31,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
                     admin: '/admin',
                     styler: '/styler',
                     partner: '/partner',
+                    user: '/'
                 };
                 router.push(dashboardMap[user.role] || '/');
             } else {

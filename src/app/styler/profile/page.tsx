@@ -13,12 +13,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SkinTone } from '@/types/clothes';
 import ImageUploader from '@/components/ImageUploader';
-import { updateProfile } from '@/lib/api/auth';
+import { userService } from '@/services/user.service';
 
 const skinTones: SkinTone[] = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
 
 export default function ProfileSettingsPage() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -63,18 +63,17 @@ export default function ProfileSettingsPage() {
         setLoading(true);
 
         try {
-            await updateProfile({
+            await userService.updateMyProfile({
                 name: formData.name,
                 // email cannot be updated directly usually
                 profilePhoto: formData.profilePhoto,
                 skinTone: formData.skinTone,
                 preferredStyle: formData.preferredStyle,
-            } as any);
+            });
 
             toast.success('Profile updated successfully!');
             setIsEditing(false);
-            // Ideally reload user context here, but page reload works too for now
-            window.location.reload();
+            await refreshUser();
         } catch (error: any) {
             console.error('Error updating profile:', error);
             toast.error('Failed to update profile');

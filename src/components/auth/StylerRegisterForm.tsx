@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
+import { authService } from '@/services/auth.service';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -26,7 +27,7 @@ interface StylerRegisterFormProps {
 }
 
 export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegisterFormProps) {
-  const { register: registerUser, loading } = useAuth();
+  const { login, loading } = useAuth();
   const { register, handleSubmit, watch, setValue } = useForm<StylerRegisterFormValues>();
   const [error, setError] = useState('');
 
@@ -50,7 +51,10 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
   const onSubmit = async (data: StylerRegisterFormValues) => {
     setError('');
     try {
-      await registerUser(data.email, data.password, 'styler', {
+      const response = await authService.register({
+        email: data.email,
+        password: data.password,
+        role: 'styler',
         fullName: data.fullName,
         phone: data.phone,
         address: data.address,
@@ -59,12 +63,16 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
         age: age || undefined
       });
 
+      if (response.token && response.user) {
+        await login(response.token, response.user);
+      }
+
       setTimeout(() => {
         if (onSuccess) onSuccess();
       }, 100);
     } catch (err: any) {
       console.error('Styler register error:', err);
-      setError(err.message || 'Registration failed');
+      setError(err?.response?.data?.error || err.message || 'Registration failed');
     }
   };
 

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
+import { authService } from '@/services/auth.service';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
@@ -25,15 +26,15 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
   const onSubmit = async (data: LoginFormValues) => {
     setError('');
     try {
-      await login(data.email, data.password);
-      
-// AuthContext will handle the page change, then the modal will close if there is a callback
+      const response = await authService.login({ email: data.email, password: data.password });
+      await login(response.token, response.user);
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (err: any) {
-      setError(err?.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(err?.response?.data?.error || err?.message || 'Login failed');
     }
   };
 

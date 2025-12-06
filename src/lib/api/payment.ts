@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 
 export interface Payment {
     _id: string;
@@ -26,12 +26,12 @@ export interface PaymentInput {
 
 // Get all payments (orders)
 export const getPayments = async (): Promise<{ data: Payment[] }> => {
-    const response = await apiClient.get('/api/payment');
+    const response = await apiClient.get('/payment');
     return response.data;
 };
 
 // Create a new payment (order)
 export const createPayment = async (data: PaymentInput): Promise<{ payment: Payment }> => {
-    const response = await apiClient.post('/api/payment', data);
+    const response = await apiClient.post('/payment', data);
     return response.data;
 };

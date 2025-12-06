@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 
 // Types
 export interface Category {
@@ -42,41 +42,41 @@ export interface Order {
 
 // Categories
 export const getCategories = async (): Promise<Category[]> => {
-    const response = await apiClient.get<Category[]>('/api/admin/categories');
+    const response = await apiClient.get<Category[]>('/admin/categories');
     return response.data;
 };
 
 export const createCategory = async (data: Partial<Category>): Promise<Category> => {
-    const response = await apiClient.post<Category>('/api/admin/categories', data);
+    const response = await apiClient.post<Category>('/admin/categories', data);
     return response.data;
 };
 
 export const updateCategory = async (id: string, data: Partial<Category>): Promise<Category> => {
-    const response = await apiClient.put<Category>(`/api/admin/categories/${id}`, data);
+    const response = await apiClient.put<Category>(`/admin/categories/${id}`, data);
     return response.data;
 };
 
 export const deleteCategory = async (id: string): Promise<void> => {
-    await apiClient.delete(`/api/admin/categories/${id}`);
+    await apiClient.delete(`/admin/categories/${id}`);
 };
 
 // Products (Admin View)
 export const getAllProducts = async (): Promise<Product[]> => {
-    const response = await apiClient.get<Product[]>('/api/admin/products');
+    const response = await apiClient.get<Product[]>('/admin/products');
     return response.data;
 };
 
 export const deleteProduct = async (id: string): Promise<void> => {
-    await apiClient.delete(`/api/admin/products/${id}`);
+    await apiClient.delete(`/admin/products/${id}`);
 };
 
 // Orders (Admin View)
 export const getAllOrders = async (): Promise<Order[]> => {
-    const response = await apiClient.get<Order[]>('/api/admin/orders');
+    const response = await apiClient.get<Order[]>('/admin/orders');
     return response.data;
 };
 
 export const getOrderDetails = async (id: string): Promise<Order> => {
-    const response = await apiClient.get<Order>(`/api/admin/orders/${id}`);
+    const response = await apiClient.get<Order>(`/admin/orders/${id}`);
     return response.data;
 };

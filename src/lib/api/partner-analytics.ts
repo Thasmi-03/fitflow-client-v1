@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 
 export interface PartnerClothItem {
     _id: string;
@@ -37,6 +37,6 @@ export interface PartnerAnalyticsResponse {
 }
 
 export const getPartnerAnalytics = async (): Promise<PartnerAnalyticsResponse> => {
-    const response = await apiClient.get<PartnerAnalyticsResponse>('/api/partners/analytics');
+    const response = await apiClient.get<PartnerAnalyticsResponse>('/partners/analytics');
     return response.data;
 };

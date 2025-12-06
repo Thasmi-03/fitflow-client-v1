@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 import { User, PendingUser } from '@/types/auth';
 
 export interface AdminUser {
@@ -29,10 +29,9 @@ export interface AdminAnalytics {
 
 /**
  * Get pending users (admin only)
- * Uses correct admin endpoint
  */
 export const getPendingUsers = async (): Promise<{ users: PendingUser[] }> => {
-    const response = await apiClient.get('/api/admin/pending-users');
+    const response = await apiClient.get('/admin/pending');
     return response.data;
 };
 
@@ -40,7 +39,7 @@ export const getPendingUsers = async (): Promise<{ users: PendingUser[] }> => {
  * Approve a user (admin only)
  */
 export const approveUser = async (userId: string): Promise<{ message: string; user: User }> => {
-    const response = await apiClient.put(`/api/admin/approve/${userId}`);
+    const response = await apiClient.put(`/admin/approve/${userId}`);
     return response.data;
 };
 
@@ -48,7 +47,7 @@ export const approveUser = async (userId: string): Promise<{ message: string; us
  * Reject a user (admin only)
  */
 export const rejectUser = async (userId: string): Promise<{ message: string }> => {
-    const response = await apiClient.patch(`/api/admin/partners/${userId}/reject`);
+    const response = await apiClient.patch(`/admin/partners/${userId}/reject`);
     return response.data;
 };
 
@@ -56,7 +55,7 @@ export const rejectUser = async (userId: string): Promise<{ message: string }> =
  * Get admin analytics
  */
 export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
-    const response = await apiClient.get('/api/admin/analytics');
+    const response = await apiClient.get('/admin/analytics');
     return response.data;
 };
 
@@ -64,7 +63,7 @@ export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
  * Get all users (admin only)
  */
 export const getUsers = async (): Promise<{ users: AdminUser[] }> => {
-    const response = await apiClient.get('/api/admin/users');
+    const response = await apiClient.get('/admin/users');
     return response.data;
 };
 
@@ -72,7 +71,7 @@ export const getUsers = async (): Promise<{ users: AdminUser[] }> => {
  * Get all partners (admin only)
  */
 export const getAllPartners = async (): Promise<{ users: AdminUser[] }> => {
-    const response = await apiClient.get('/api/admin/users?role=partner');
+    const response = await apiClient.get('/admin/users?role=partner');
     return response.data;
 };
 
@@ -80,7 +79,7 @@ export const getAllPartners = async (): Promise<{ users: AdminUser[] }> => {
  * Get all stylists (admin only)
  */
 export const getAllStylists = async (): Promise<{ users: AdminUser[] }> => {
-    const response = await apiClient.get('/api/admin/users?role=styler');
+    const response = await apiClient.get('/admin/users?role=styler');
     return response.data;
 };
 
@@ -88,7 +87,7 @@ export const getAllStylists = async (): Promise<{ users: AdminUser[] }> => {
  * Get all payments (admin only)
  */
 export const getAllPayments = async (): Promise<{ payments: any[] }> => {
-    const response = await apiClient.get('/api/payment');
+    const response = await apiClient.get('/payment');
     return response.data;
 };
 
@@ -96,7 +95,7 @@ export const getAllPayments = async (): Promise<{ payments: any[] }> => {
  * Get pending partners (admin only)
  */
 export const getPendingPartners = async (): Promise<{ users: PendingUser[] }> => {
-    const response = await apiClient.get('/api/admin/partners/pending');
+    const response = await apiClient.get('/admin/partners/pending');
     return response.data;
 };
 

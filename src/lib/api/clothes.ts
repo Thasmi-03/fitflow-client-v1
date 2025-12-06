@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 import { Clothes, CreateClothesInput, UpdateClothesInput } from '@/types/clothes';
 
 export type { Clothes };
@@ -24,42 +24,42 @@ export interface GetClothesResponse {
 }
 
 export const getClothes = async (params: GetClothesParams = {}): Promise<GetClothesResponse> => {
-    const response = await apiClient.get('/api/stylerclothes/mine', { params });
+    const response = await apiClient.get('/stylerclothes/mine', { params });
     return response.data;
 };
 
 export const getClothesById = async (id: string): Promise<{ clothes: Clothes }> => {
-    const response = await apiClient.get(`/api/stylerclothes/${id}`);
+    const response = await apiClient.get(`/stylerclothes/${id}`);
     return { clothes: response.data };
 };
 
 // Fashion Hub API
 export const getSkinToneSuggestions = async (skinTone: string) => {
-    const response = await apiClient.get(`/api/styler/suggestions/skin-tone?skinTone=${skinTone}`);
+    const response = await apiClient.get(`/styler/suggestions/skin-tone?skinTone=${skinTone}`);
     return response.data;
 };
 
 export const getUsageStats = async (sort: 'asc' | 'desc' = 'desc') => {
-    const response = await apiClient.get(`/api/styler/suggestions/usage?sort=${sort}`);
+    const response = await apiClient.get(`/styler/suggestions/usage?sort=${sort}`);
     return response.data;
 };
 
 export const getOccasionSuggestions = async (occasion: string) => {
-    const response = await apiClient.get(`/api/styler/suggestions/occasion?occasion=${occasion}`);
+    const response = await apiClient.get(`/styler/suggestions/occasion?occasion=${occasion}`);
     return response.data;
 };
 
 export const addClothes = async (data: CreateClothesInput): Promise<{ clothes: Clothes }> => {
-    const response = await apiClient.post('/api/stylerclothes', data);
+    const response = await apiClient.post('/stylerclothes', data);
     return response.data;
 };
 
 export const updateClothes = async (id: string, data: Partial<CreateClothesInput>): Promise<{ clothes: Clothes }> => {
-    const response = await apiClient.put(`/api/stylerclothes/${id}`, data);
+    const response = await apiClient.put(`/stylerclothes/${id}`, data);
     return response.data;
 };
 
 export const deleteClothes = async (id: string): Promise<{ message: string }> => {
-    const response = await apiClient.delete(`/api/stylerclothes/${id}`);
+    const response = await apiClient.delete(`/stylerclothes/${id}`);
     return response.data;
 };

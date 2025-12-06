@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
+import { authService } from '@/services/auth.service';
 import { Role } from '@/types/auth';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -31,7 +32,7 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin }: RegisterFormProps = {}) {
-  const { register: registerUser, loading } = useAuth();
+  const { login, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
@@ -60,17 +61,30 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
   const onSubmit = async (data: RegisterFormValues) => {
     setError('');
     try {
-      await registerUser(data.email, data.password, data.role as Role, {
+      const registerData = {
+        email: data.email,
+        password: data.password,
+        role: data.role as Role,
         fullName: data.fullName,
         phone: data.phone,
         address: data.address,
         ...(data.role === 'styler' && data.gender ? { gender: data.gender } : {}),
         ...(data.role === 'styler' && data.dateOfBirth ? { dateOfBirth: data.dateOfBirth } : {}),
-      }, isPartnerPage);
+      };
+
+      const response = await authService.register(registerData);
+
+      if (response.token && response.user) {
+        await login(response.token, response.user);
+      } else if (data.role === 'partner') {
+        // Partners might not get a token immediately if approval is needed
+        if (onSuccess) onSuccess();
+      }
+
       if (onSuccess) onSuccess();
     } catch (err: any) {
       console.error('Registration error:', err);
-      setError(err.message || 'Registration failed');
+      setError(err?.response?.data?.error || err.message || 'Registration failed');
     }
   };
 

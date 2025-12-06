@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@/lib/apiClient';
 
 export interface PartnerClothes {
     id: string;
@@ -43,19 +43,19 @@ export interface PartnerClothesInput {
 
 // Get partner's own clothes
 export const getPartnerClothes = async (): Promise<{ clothes: PartnerClothes[] }> => {
-    const response = await apiClient.get('/api/partnerclothes/mine');
+    const response = await apiClient.get('/partnerclothes/mine');
     return { clothes: response.data.data };
 };
 
 // Get public partner clothes (for styler suggestions)
 export const getPublicPartnerClothes = async (): Promise<{ clothes: PartnerClothes[] }> => {
-    const response = await apiClient.get('/api/partnerclothes');
+    const response = await apiClient.get('/partnerclothes');
     return { clothes: response.data.data };
 };
 
 // Get single partner clothes by ID
 export const getPartnerClothesById = async (id: string): Promise<{ clothes: PartnerClothes }> => {
-    const response = await apiClient.get(`/api/partnerclothes/${id}`);
+    const response = await apiClient.get(`/partnerclothes/${id}`);
     return { clothes: response.data };
 };
 
@@ -64,7 +64,7 @@ export const getPartnerClothesById = async (id: string): Promise<{ clothes: Part
 export const addPartnerClothes = async (data: PartnerClothesInput): Promise<{ clothes: PartnerClothes }> => {
     console.log("Sending addPartnerClothes data:", data);
     try {
-        const response = await apiClient.post('/api/partnerclothes', data);
+        const response = await apiClient.post('/partnerclothes', data);
         return { clothes: response.data.cloth };
     } catch (error) {
         console.error("addPartnerClothes error:", error);
@@ -74,13 +74,13 @@ export const addPartnerClothes = async (data: PartnerClothesInput): Promise<{ cl
 
 // Update partner clothes
 export const updatePartnerClothes = async (id: string, data: Partial<PartnerClothesInput>): Promise<{ clothes: PartnerClothes }> => {
-    const response = await apiClient.put(`/api/partnerclothes/${id}`, data);
+    const response = await apiClient.put(`/partnerclothes/${id}`, data);
     return { clothes: response.data.cloth };
 };
 
 // Delete partner clothes
 export const deletePartnerClothes = async (id: string): Promise<{ message: string }> => {
-    const response = await apiClient.delete(`/api/partnerclothes/${id}`);
+    const response = await apiClient.delete(`/partnerclothes/${id}`);
     return response.data;
 };
 
@@ -138,7 +138,7 @@ export const getSmartSuggestions = async (params?: {
     if (params?.limit) queryParams.append('limit', params.limit.toString());
 
     const queryString = queryParams.toString();
-    const url = `/api/partnerclothes/suggestions${queryString ? `?${queryString}` : ''}`;
+    const url = `/partnerclothes/suggestions${queryString ? `?${queryString}` : ''}`;
 
     const response = await apiClient.get(url);
     return response.data;
@@ -146,6 +146,6 @@ export const getSmartSuggestions = async (params?: {
 
 // Record a view on a partner cloth (styler only)
 export const recordPartnerClothView = async (id: string): Promise<{ message: string; viewCount: number }> => {
-    const response = await apiClient.post(`/api/partnerclothes/${id}/view`);
+    const response = await apiClient.post(`/partnerclothes/${id}/view`);
     return response.data;
 };

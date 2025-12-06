@@ -10,11 +10,12 @@ import { User, Mail, Shield, Store, Save, MapPin, Phone } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { getMyProfile, updateMyProfile, UserProfile } from '@/lib/api/user';
+import { userService } from '@/services/user.service';
+import { UserProfile } from '@/types/user';
 import ImageUploader from '@/components/ImageUploader';
 
 export default function PartnerProfilePage() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -34,7 +35,8 @@ export default function PartnerProfilePage() {
     const loadProfile = async () => {
         try {
             setLoading(true);
-            const data = await getMyProfile();
+            const response = await userService.getMyProfile();
+            const data = response.user || response;
             setProfile(data);
             setShopDetails({
                 name: data.name || '',
@@ -55,10 +57,10 @@ export default function PartnerProfilePage() {
         setSaving(true);
 
         try {
-            await updateMyProfile(shopDetails);
+            await userService.updateMyProfile(shopDetails);
             toast.success('Profile updated successfully!');
-            loadProfile(); // Reload to get updated data
-            window.location.reload(); // Force reload to update sidebar
+            await refreshUser();
+            loadProfile();
         } catch (error) {
             console.error('Error updating profile:', error);
             toast.error('Failed to update profile');
