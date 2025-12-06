@@ -3,19 +3,19 @@ import { AdminStats, PendingUser } from "@/types/admin";
 
 export const adminService = {
     getStats: async () => {
-        const response = await apiClient.get<AdminStats>("/admin/stats");
+        const response = await apiClient.get<AdminStats>("/admin/analytics");
         return response.data;
     },
     getPendingUsers: async () => {
-        const response = await apiClient.get<{ count: number; users: PendingUser[] }>("/admin/pending-users");
+        const response = await apiClient.get<{ count: number; users: PendingUser[] }>("/admin/pending");
         return response.data;
     },
     approveUser: async (userId: string) => {
-        const response = await apiClient.post(`/admin/approve-user/${userId}`);
+        const response = await apiClient.put(`/admin/approve/${userId}`);
         return response.data;
     },
     rejectUser: async (userId: string) => {
-        const response = await apiClient.post(`/admin/reject-user/${userId}`);
+        const response = await apiClient.patch(`/admin/partners/${userId}/reject`);
         return response.data;
     },
     getUsers: async (role?: string) => {
