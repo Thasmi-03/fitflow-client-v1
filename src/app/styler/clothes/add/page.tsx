@@ -117,14 +117,18 @@ export default function AddClothesPage() {
 
     const onSubmit = async (data: AddClothesFormValues) => {
         try {
-            await clothesService.create({
+            const payload = {
                 name: data.name,
                 category: data.category,
                 color: data.color,
                 occasion: data.occasion,
                 note: data.description || undefined,
                 image: data.imageUrl || undefined,
-            });
+            };
+
+            console.log('Submitting clothes data:', payload);
+
+            await clothesService.create(payload);
 
             toast.success('Clothes added successfully!', {
                 duration: 3000,
@@ -132,7 +136,21 @@ export default function AddClothesPage() {
             router.push('/styler/clothes');
         } catch (error: any) {
             console.error('Error adding clothes:', error);
-            toast.error(error?.response?.data?.message || 'Failed to add clothes', {
+            console.error('Error response:', error?.response);
+            console.error('Error data:', error?.response?.data);
+
+            // Build detailed error message
+            const errorMessage = error?.response?.data?.error
+                || error?.response?.data?.message
+                || error?.message
+                || 'Failed to add clothes';
+
+            const errorDetails = error?.response?.data?.details;
+            const fullErrorMessage = errorDetails
+                ? `${errorMessage}: ${JSON.stringify(errorDetails)}`
+                : errorMessage;
+
+            toast.error(fullErrorMessage, {
                 duration: Infinity,
                 closeButton: true,
             });

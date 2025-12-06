@@ -1,11 +1,11 @@
 export type Category = 'dress' | 'shirt' | 'pants' | 'jacket' | 'skirt' | 'top' | 'shorts' | 'suit' | 'blazer' | 'sweater' | 'coat' | 'tshirt' | 'frock';
 export type Color = 'red' | 'blue' | 'green' | 'yellow' | 'black' | 'white' | 'gray' | 'brown' | 'pink' | 'purple' | 'orange' | 'beige' | 'navy' | 'maroon' | 'teal' | 'coral' | 'multi';
-export type Occasion = 'casual' | 'formal' | 'party' | 'wedding' | 'work' | 'gym' | 'vacation' | 'date';
+export type Occasion = 'casual' | 'formal' | 'business' | 'party' | 'wedding' | 'sports' | 'beach';
 export type SkinTone = 'fair' | 'light' | 'medium' | 'tan' | 'deep' | 'dark';
 
 export const CATEGORIES: Category[] = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'blazer', 'sweater', 'coat', 'tshirt', 'frock'];
 export const PARTNER_CATEGORIES = CATEGORIES;
-export const OCCASIONS: Occasion[] = ['casual', 'formal', 'party', 'wedding', 'work', 'gym', 'vacation', 'date'];
+export const OCCASIONS: Occasion[] = ['casual', 'formal', 'business', 'party', 'wedding', 'sports', 'beach'];
 
 export interface Cloth {
     _id: string;
