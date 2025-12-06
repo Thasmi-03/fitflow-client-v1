@@ -12,7 +12,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getClothesById, updateClothes } from '@/lib/api/clothes';
+import { clothesService } from '@/services/clothes.service';
 import { toast } from 'sonner';
 import { Category, Color, OCCASIONS, Occasion } from '@/types/clothes';
 import { Upload, X, Loader2 } from 'lucide-react';
@@ -49,7 +49,7 @@ export default function EditClothesPage() {
     const loadClothes = async () => {
         try {
             setFetching(true);
-            const response = await getClothesById(id);
+            const response = await clothesService.getById(id);
             const item = response.clothes;
 
             // Check if item exists
@@ -63,8 +63,8 @@ export default function EditClothesPage() {
                 name: item.name || '',
                 category: item.category || '',
                 color: item.color || '',
-                // Handle occasion as array
-                occasion: Array.isArray(item.occasion) ? item.occasion : (item.occasion ? [item.occasion] : []),
+                // Handle occasion as array and cast to Occasion[]
+                occasion: (Array.isArray(item.occasion) ? item.occasion : (item.occasion ? [item.occasion] : [])) as Occasion[],
                 description: item.description || (item as any).note || '',
                 imageUrl: item.imageUrl || (item as any).image || '',
             });
@@ -181,7 +181,7 @@ export default function EditClothesPage() {
 
             console.log('Sending update payload:', updatePayload);
 
-            await updateClothes(id, updatePayload);
+            await clothesService.update(id, updatePayload);
 
             toast.success('Clothes updated successfully!');
             router.push('/styler/clothes');

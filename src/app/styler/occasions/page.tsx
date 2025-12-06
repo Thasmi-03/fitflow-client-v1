@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar, Plus, Edit, Trash2, X, Sparkles } from 'lucide-react';
-import { getOccasions, createOccasion, updateOccasion, deleteOccasion, getOccasionSuggestions, Occasion, CreateOccasionInput } from '@/lib/api/occasions';
-import { recordPartnerClothView } from '@/lib/api/partner-clothes';
+import { occasionsService } from '@/services/occasions.service';
+import { partnerService } from '@/services/partner.service';
+import { Occasion, CreateOccasionInput } from '@/types/occasions';
 import { toast } from 'sonner';
 
 export default function OccasionsPage() {
@@ -56,7 +57,7 @@ export default function OccasionsPage() {
     const loadOccasions = async () => {
         try {
             setLoading(true);
-            const response = await getOccasions();
+            const response = await occasionsService.getAll();
             setOccasions(response.data);
         } catch (error) {
             console.error('Error loading occasions:', error);
@@ -76,10 +77,10 @@ export default function OccasionsPage() {
 
         try {
             if (editingOccasion) {
-                await updateOccasion(editingOccasion._id, formData);
+                await occasionsService.update(editingOccasion._id, formData);
                 toast.success('Occasion updated successfully');
             } else {
-                await createOccasion(formData);
+                await occasionsService.create(formData);
                 toast.success('Occasion created successfully');
             }
             loadOccasions();
@@ -94,7 +95,7 @@ export default function OccasionsPage() {
         if (!confirm('Are you sure you want to delete this occasion?')) return;
 
         try {
-            await deleteOccasion(id);
+            await occasionsService.delete(id);
             toast.success('Occasion deleted successfully');
             loadOccasions();
         } catch (error) {
@@ -143,14 +144,14 @@ export default function OccasionsPage() {
         setSuggestionsLoading(true);
 
         try {
-            const response = await getOccasionSuggestions(occasion._id);
+            const response = await occasionsService.getSuggestions(occasion._id);
             setSuggestions(response.suggestions);
 
             // Record views for partner clothes shown in suggestions
             for (const item of response.suggestions) {
                 if (item.partner) {
                     try {
-                        await recordPartnerClothView(item._id);
+                        await partnerService.recordView(item._id);
                     } catch (viewError) {
                         // Silently handle view recording errors
                         console.log('View recording skipped:', viewError);

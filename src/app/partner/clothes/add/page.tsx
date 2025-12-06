@@ -12,7 +12,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { addPartnerClothes } from '@/lib/api/partner-clothes';
+import { partnerService } from '@/services/partner.service';
 import { toast } from 'sonner';
 import { PARTNER_CATEGORIES } from '@/types/clothes';
 import { Upload, X, Loader2 } from 'lucide-react';
@@ -106,7 +106,7 @@ export default function AddPartnerClothesPage() {
         }
 
         try {
-            await addPartnerClothes({
+            await partnerService.addCloth({
                 name: formData.name,
                 category: formData.category,
                 color: formData.color,

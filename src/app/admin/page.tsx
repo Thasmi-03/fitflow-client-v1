@@ -5,11 +5,12 @@ import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { Users, CheckCircle, UserCheck, Store, ShoppingBag, DollarSign } from 'lucide-react';
-import { getAdminAnalytics, getPendingUsers, AdminAnalytics } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
 import { toast } from 'sonner';
+import { AdminStats } from '@/types/admin';
 
 export default function AdminDashboard() {
-    const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
+    const [analytics, setAnalytics] = useState<AdminStats | null>(null);
     const [pendingCount, setPendingCount] = useState(0);
     const [loading, setLoading] = useState(true);
 
@@ -26,7 +27,7 @@ export default function AdminDashboard() {
             let pendingData = null;
 
             try {
-                analyticsData = await getAdminAnalytics();
+                analyticsData = await adminService.getStats();
                 setAnalytics(analyticsData);
             } catch (analyticsError: any) {
                 console.log('Analytics endpoint not available (404), using fallback');
@@ -42,7 +43,7 @@ export default function AdminDashboard() {
             }
 
             try {
-                pendingData = await getPendingUsers();
+                pendingData = await adminService.getPendingUsers();
                 setPendingCount(pendingData.users.length);
             } catch (pendingError) {
                 console.log('Pending users endpoint error, using fallback');

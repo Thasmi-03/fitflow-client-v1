@@ -5,8 +5,8 @@ import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { getPendingUsers, approveUser } from '@/lib/api/admin';
-import { PendingUser } from '@/types/auth';
+import { adminService } from '@/services/admin.service';
+import { PendingUser } from '@/types/admin';
 import { toast } from 'sonner';
 import { UserCheck, CheckCircle, Clock } from 'lucide-react';
 
@@ -21,7 +21,7 @@ export default function ApprovalsPage() {
     const loadPendingUsers = async () => {
         try {
             setLoading(true);
-            const response = await getPendingUsers();
+            const response = await adminService.getPendingUsers();
             setPendingUsers(response.users);
         } catch (error) {
             console.error('Error loading pending users:', error);
@@ -33,7 +33,7 @@ export default function ApprovalsPage() {
 
     const handleApprove = async (userId: string) => {
         try {
-            await approveUser(userId);
+            await adminService.approveUser(userId);
             toast.success('User approved successfully');
             loadPendingUsers();
         } catch (error) {
@@ -102,7 +102,7 @@ export default function ApprovalsPage() {
                                     <div className="space-y-4">
                                         {pendingUsers.map((pendingUser) => (
                                             <div
-                                                key={pendingUser.id}
+                                                key={pendingUser._id}
                                                 className="flex items-center justify-between rounded-lg border p-4 hover:shadow-md transition-shadow"
                                             >
                                                 <div className="flex-1">
@@ -117,7 +117,7 @@ export default function ApprovalsPage() {
                                                     </div>
                                                 </div>
                                                 <Button
-                                                    onClick={() => handleApprove(pendingUser.id)}
+                                                    onClick={() => handleApprove(pendingUser._id)}
                                                     size="sm"
                                                     className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
                                                 >

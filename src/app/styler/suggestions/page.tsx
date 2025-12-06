@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sparkles, Filter, Heart, ArrowRight, Package, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { getPublicPartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
-import { getMyProfile, toggleFavorite } from '@/lib/api/user';
+import { partnerService } from '@/services/partner.service';
+import { userService } from '@/services/user.service';
+import { PartnerClothes } from '@/types/partner';
 import { toast } from 'sonner';
 import { SkinTone } from '@/types/clothes';
 
@@ -36,8 +37,8 @@ export default function SuggestionsPage() {
         try {
             setLoading(true);
             const [clothesRes, profileRes] = await Promise.all([
-                getPublicPartnerClothes(),
-                getMyProfile().catch(() => ({ favorites: [] }))
+                partnerService.getPublicClothes(),
+                userService.getProfile().catch(() => ({ favorites: [] }))
             ]);
             setClothes(clothesRes.clothes);
             if (profileRes.favorites) {
@@ -54,7 +55,7 @@ export default function SuggestionsPage() {
     const handleFavorite = async (e: React.MouseEvent, clothId: string) => {
         e.stopPropagation(); // Prevent card click
         try {
-            const res = await toggleFavorite(clothId);
+            const res = await userService.toggleFavorite(clothId);
             setFavorites(res.favorites);
             toast.success(res.isFavorite ? 'Added to favorites' : 'Removed from favorites');
         } catch (error) {
@@ -250,7 +251,7 @@ export default function SuggestionsPage() {
                         ) : (
                             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                 {filteredClothes.map((item) => {
-                                    const itemId = item._id || item.id;
+                                    const itemId = (item._id || item.id) as string;
                                     const isFavorite = favorites.includes(itemId);
 
                                     return (

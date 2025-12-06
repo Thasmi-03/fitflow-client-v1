@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, Package, Search, Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { getPartnerClothes, deletePartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
+import { partnerService } from '@/services/partner.service';
+import { PartnerClothes } from '@/types/partner';
 import { toast } from 'sonner';
 import { Category, Color } from '@/types/clothes';
 
@@ -31,7 +32,7 @@ export default function PartnerInventoryPage() {
     const loadClothes = async () => {
         try {
             setLoading(true);
-            const response = await getPartnerClothes();
+            const response = await partnerService.getClothes();
             setClothes(response.clothes);
         } catch (error) {
             console.error('Error loading clothes:', error);
@@ -45,7 +46,7 @@ export default function PartnerInventoryPage() {
         if (!confirm('Are you sure you want to delete this product?')) return;
 
         try {
-            await deletePartnerClothes(id);
+            await partnerService.deleteCloth(id);
             toast.success('Product deleted successfully');
             loadClothes();
         } catch (error) {

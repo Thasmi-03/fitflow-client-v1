@@ -5,11 +5,12 @@ import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShoppingBag, Mail, Phone, MapPin } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getAllStylists, AdminUser } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
+import { UserProfile } from '@/types/user';
 import { toast } from 'sonner';
 
 export default function StylistsPage() {
-    const [stylists, setStylists] = useState<AdminUser[]>([]);
+    const [stylists, setStylists] = useState<UserProfile[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function StylistsPage() {
     const loadStylists = async () => {
         try {
             setLoading(true);
-            const response = await getAllStylists();
+            const response = await adminService.getAllStylists();
             setStylists(response.users);
         } catch (error: any) {
             if (error?.response?.status === 404) {
@@ -117,7 +118,7 @@ export default function StylistsPage() {
                                     <div className="space-y-4">
                                         {stylists.map((stylist) => (
                                             <div
-                                                key={stylist._id || stylist.id}
+                                                key={stylist._id}
                                                 className="rounded-lg border p-6 hover:shadow-md transition-shadow"
                                             >
                                                 <div className="flex items-start justify-between mb-4">

@@ -5,7 +5,8 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, Store, Calendar, TrendingUp } from 'lucide-react';
-import { getPartnerAnalytics, PartnerAnalytics } from '@/lib/api/partner-analytics';
+import { partnerService } from '@/services/partner.service';
+import { PartnerAnalytics } from '@/types/partner';
 import { toast } from 'sonner';
 
 export default function PartnerAnalyticsPage() {
@@ -20,7 +21,7 @@ export default function PartnerAnalyticsPage() {
     const loadPartners = async () => {
         try {
             setLoading(true);
-            const response = await getPartnerAnalytics();
+            const response = await partnerService.getAnalytics();
             setPartners(response.partners);
         } catch (error) {
             console.error('Error loading partner analytics:', error);

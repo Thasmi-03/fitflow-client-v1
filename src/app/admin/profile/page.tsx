@@ -33,11 +33,9 @@ export default function AdminProfilePage() {
     const loadProfile = async () => {
         try {
             setLoading(true);
-            const response = await userService.getMyProfile();
-            // Handle response structure: { success: true, user: { ... } } or just user object depending on backend
-            // Based on authService.getCurrentUser, it returns response.data
-            // Assuming backend returns { success: true, user: ... } or just user
-            const data = response.user || response;
+            const response = await userService.getProfile();
+            // Based on userService.getProfile, it returns UserProfile directly
+            const data = response;
 
             setProfile(data);
             setFormData({
@@ -57,7 +55,7 @@ export default function AdminProfilePage() {
         setSaving(true);
 
         try {
-            await userService.updateMyProfile(formData);
+            await userService.updateProfile(formData);
             toast.success('Profile updated successfully!');
             await refreshUser(); // Update context
             loadProfile(); // Reload local state

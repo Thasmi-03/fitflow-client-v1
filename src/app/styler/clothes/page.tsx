@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Package, Search, Filter } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
-import { getClothes, deleteClothes } from '@/lib/api/clothes';
+import { clothesService } from '@/services/clothes.service';
 import { Clothes } from '@/types/clothes';
 import { toast } from 'sonner';
 
@@ -61,7 +61,7 @@ export default function StylerClothesPage() {
             if (filterSkinTone !== 'all') params.skinTone = filterSkinTone;
             if (filterGender !== 'all') params.gender = filterGender;
 
-            const response = await getClothes(params);
+            const response = await clothesService.getAll(params);
             setClothes(response.clothes);
             setTotalPages(response.totalPages);
             setTotalItems(response.total);
@@ -77,7 +77,7 @@ export default function StylerClothesPage() {
         if (!confirm('Are you sure you want to delete this item?')) return;
 
         try {
-            await deleteClothes(id);
+            await clothesService.delete(id);
             toast.success('Clothes deleted successfully');
             loadClothes();
         } catch (error) {
@@ -91,7 +91,7 @@ export default function StylerClothesPage() {
     const categories = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'Frock', 'blazer', 'sweater', 'coat', 'Tshirt', 'gown'];
     const colors = ['red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'brown', 'pink', 'purple', 'orange', 'beige', 'navy', 'maroon', 'teal', 'coral', 'multi'];
     const skinTones = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
-    const genders = ['male', 'female', 'unisex'];
+    const genders = ['male', 'female'];
 
     return (
         <ProtectedRoute allowedRoles={['styler']}>

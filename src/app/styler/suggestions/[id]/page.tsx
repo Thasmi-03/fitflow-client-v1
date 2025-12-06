@@ -8,7 +8,8 @@ import { ArrowLeft, Package, ShoppingBag, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getPartnerClothesById, PartnerClothes } from '@/lib/api/partner-clothes';
+import { partnerService } from '@/services/partner.service';
+import { PartnerClothes } from '@/types/partner';
 import { toast } from 'sonner';
 
 export default function ProductDetailsPage() {
@@ -26,7 +27,7 @@ export default function ProductDetailsPage() {
     const loadProduct = async (id: string) => {
         try {
             setLoading(true);
-            const response = await getPartnerClothesById(id);
+            const response = await partnerService.getClothById(id);
             setProduct(response.clothes);
         } catch (error) {
             console.error('Error loading product:', error);

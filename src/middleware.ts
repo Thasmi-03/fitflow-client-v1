@@ -5,23 +5,30 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get("token")?.value;
     const { pathname } = request.nextUrl;
 
-    console.log(`Middleware: Path: ${pathname}, Token found: ${!!token}`);
-
     // Define public routes
-    const publicRoutes = ["/", "/auth/login", "/auth/register", "/auth/signup"];
-
-    // Allow public routes
-    if (publicRoutes.some((route) => pathname.startsWith(route))) {
+    const publicRoutes = ["/auth/login", "/auth/register", "/auth/signup"];
+    if (pathname === "/" || publicRoutes.some((route) => pathname.startsWith(route))) {
         return NextResponse.next();
     }
 
-    // Protected routes - redirect to login if no token
+    // Protected routes
     if (!token) {
         return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
-    // Role-based access could be implemented here if user role is stored in cookie
-    // For now, we rely on client-side role checks or backend validation
+    // Role-based access (if applicable)
+    // Note: Storing user role in cookie is not secure for critical checks, but okay for redirection
+    const userCookie = request.cookies.get("user")?.value;
+    if (userCookie) {
+        try {
+            const user = JSON.parse(userCookie);
+            if (pathname.startsWith("/admin") && user.role !== "admin") {
+                return NextResponse.redirect(new URL("/", request.url));
+            }
+        } catch (e) {
+            // Ignore JSON parse error
+        }
+    }
 
     return NextResponse.next();
 }

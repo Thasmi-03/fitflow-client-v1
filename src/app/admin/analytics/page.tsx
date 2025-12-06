@@ -5,11 +5,12 @@ import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, TrendingUp, Users, DollarSign, UserPlus, LogIn } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getAdminAnalytics, AdminAnalytics as AnalyticsData } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
+import { AdminStats } from '@/types/admin';
 import { toast } from 'sonner';
 
 export default function AnalyticsPage() {
-    const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+    const [analytics, setAnalytics] = useState<AdminStats | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function AnalyticsPage() {
     const loadAnalytics = async () => {
         try {
             setLoading(true);
-            const data = await getAdminAnalytics();
+            const data = await adminService.getStats();
             setAnalytics(data);
         } catch (error: any) {
             console.error('Error loading analytics:', error);

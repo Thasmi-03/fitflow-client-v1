@@ -12,7 +12,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { getPartnerClothesById, updatePartnerClothes } from '@/lib/api/partner-clothes';
+import { partnerService } from '@/services/partner.service';
 import { toast } from 'sonner';
 import { Category, Color } from '@/types/clothes';
 
@@ -43,7 +43,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
     const loadClothes = async () => {
         try {
             setFetching(true);
-            const response = await getPartnerClothesById(id);
+            const response = await partnerService.getClothById(id);
             const item = response.clothes;
 
             if (!item) {
@@ -91,7 +91,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
         setLoading(true);
 
         try {
-            await updatePartnerClothes(id, {
+            await partnerService.updateCloth(id, {
                 name: formData.name,
                 category: formData.category,
                 color: formData.color,

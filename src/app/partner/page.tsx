@@ -7,15 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Package, DollarSign, TrendingUp, Plus, ShoppingBag, Edit, BarChart3, Trash2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getPartnerClothes, deletePartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
-import { getPayments, Payment } from '@/lib/api/payment';
+import { partnerService } from '@/services/partner.service';
+import { ordersService } from '@/services/orders.service';
+import { PartnerClothes } from '@/types/partner';
+import { Order } from '@/types/orders';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 export default function PartnerDashboard() {
     const router = useRouter();
     const [clothes, setClothes] = useState<PartnerClothes[]>([]);
-    const [orders, setOrders] = useState<Payment[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -26,7 +28,7 @@ export default function PartnerDashboard() {
     const loadClothes = async () => {
         try {
             setLoading(true);
-            const response = await getPartnerClothes();
+            const response = await partnerService.getClothes();
             setClothes(response.clothes);
         } catch (error) {
             console.error('Error loading clothes:', error);
@@ -38,7 +40,7 @@ export default function PartnerDashboard() {
 
     const loadOrders = async () => {
         try {
-            const response = await getPayments();
+            const response = await ordersService.getAll();
             setOrders(response.data);
         } catch (error) {
             console.error('Error loading orders:', error);
@@ -49,7 +51,7 @@ export default function PartnerDashboard() {
         if (!confirm('Are you sure you want to delete this product?')) return;
 
         try {
-            await deletePartnerClothes(id);
+            await partnerService.deleteCloth(id);
             toast.success('Product deleted successfully');
             loadClothes(); // Reload the list
         } catch (error) {
@@ -242,14 +244,14 @@ export default function PartnerDashboard() {
                                             orders.slice(0, 5).map((order) => (
                                                 <div key={order._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                                                     <div className="flex-1">
-                                                        <p className="font-medium text-gray-900">{order.productName || 'Unknown Item'}</p>
+                                                        <p className="font-medium text-gray-900">Order #{order._id.slice(-6)}</p>
                                                         <p className="text-sm text-gray-600">
-                                                            {order.occasion ? `Occasion: ${order.occasion}` : 'No occasion specified'}
+                                                            {new Date(order.createdAt).toLocaleDateString()} • {order.items.length} items
                                                         </p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="font-bold text-gray-900">${order.amount}</p>
-                                                        <span className={`text-xs px-2 py-1 rounded-full ${order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                        <p className="font-bold text-gray-900">${order.totalAmount}</p>
+                                                        <span className={`text-xs px-2 py-1 rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                                                             order.status === 'pending' ? 'bg-blue-100 text-blue-800' :
                                                                 'bg-yellow-100 text-yellow-800'
                                                             }`}>

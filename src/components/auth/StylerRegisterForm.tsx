@@ -19,7 +19,7 @@ interface StylerRegisterFormValues {
   dateOfBirth: string;
 }
 
-const genders = ['male', 'female', 'unisex'] as const;
+const genders = ['male', 'female'] as const;
 
 interface StylerRegisterFormProps {
   onSuccess?: () => void;

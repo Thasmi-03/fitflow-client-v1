@@ -6,7 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Search, Users, ShoppingBag, Package } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getPublicPartnerClothes, PartnerClothes } from '@/lib/api/partner-clothes';
+import { partnerService } from '@/services/partner.service';
+import { PartnerClothes } from '@/types/partner';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
@@ -20,10 +21,10 @@ export default function HomePage() {
 
   const loadFeaturedProducts = async () => {
     try {
-      const response = await getPublicPartnerClothes();
+      const response = await partnerService.getPublicClothes();
       // Get the last 4 uploaded dresses (most recent)
       if (response && response.clothes) {
-        const sortedByDate = response.clothes.sort((a, b) =>
+        const sortedByDate = response.clothes.sort((a: PartnerClothes, b: PartnerClothes) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setFeaturedProducts(sortedByDate.slice(0, 4));

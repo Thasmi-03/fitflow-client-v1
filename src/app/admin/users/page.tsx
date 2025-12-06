@@ -7,11 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Users, UserCheck, UserX, Search, Filter } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
-import { getUsers, AdminUser } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
 import { toast } from 'sonner';
+import { UserProfile } from '@/types/user';
 
 export default function UsersPage() {
-    const [users, setUsers] = useState<AdminUser[]>([]);
+    const [users, setUsers] = useState<UserProfile[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState<'all' | 'styler' | 'partner'>('all');
@@ -24,7 +25,7 @@ export default function UsersPage() {
     const loadUsers = async () => {
         try {
             setLoading(true);
-            const response = await getUsers();
+            const response = await adminService.getUsers();
             setUsers(response.users);
         } catch (error: any) {
             if (error?.response?.status === 404) {
@@ -130,7 +131,7 @@ export default function UsersPage() {
                                             </thead>
                                             <tbody>
                                                 {filteredUsers.map((user) => (
-                                                    <tr key={user._id || user.id} className="bg-white border-b hover:bg-gray-50">
+                                                    <tr key={user._id} className="bg-white border-b hover:bg-gray-50">
                                                         <td className="px-6 py-4 font-medium text-gray-900">
                                                             {user.email}
                                                         </td>

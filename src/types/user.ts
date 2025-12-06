@@ -1,31 +1,24 @@
-export interface User {
+export interface UserProfile {
     _id: string;
-    name: string;
     email: string;
-    role: 'admin' | 'styler' | 'partner' | 'user';
+    role: 'styler' | 'partner' | 'admin';
+    isApproved: boolean;
+    name?: string;
+    location?: string;
+    phone?: string;
+    createdAt: string;
+    updatedAt: string;
+    favorites?: string[];
     profilePhoto?: string;
     skinTone?: string;
     preferredStyle?: string;
-    phone?: string;
-    location?: string;
 }
 
-export interface LoginCredentials {
-    email: string;
-    password: string;
-}
-
-export interface RegisterData {
+export interface UpdateProfileInput {
     name?: string;
-    fullName?: string;
-    email: string;
-    password: string;
-    role?: string;
+    location?: string;
     phone?: string;
-    address?: string;
-    gender?: string;
-    dateOfBirth?: string;
-    age?: number;
+    profilePhoto?: string;
+    skinTone?: string;
+    preferredStyle?: string;
 }
-
-export interface UserProfile extends User { }

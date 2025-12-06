@@ -63,7 +63,7 @@ export default function ProfileSettingsPage() {
         setLoading(true);
 
         try {
-            await userService.updateMyProfile({
+            await userService.updateProfile({
                 name: formData.name,
                 // email cannot be updated directly usually
                 profilePhoto: formData.profilePhoto,

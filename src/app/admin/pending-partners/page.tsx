@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { getPendingPartners, approvePartner, rejectPartner } from '@/lib/api/admin';
-import { PendingUser } from '@/types/auth';
+import { adminService } from '@/services/admin.service';
+import { PendingUser } from '@/types/admin';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -40,8 +40,9 @@ export default function PendingPartnersPage() {
     const fetchPartners = async () => {
         try {
             setLoading(true);
-            const data = await getPendingPartners();
-            setPartners(data.users);
+            const data = await adminService.getPendingUsers();
+            // Filter for partners only if needed, or assume backend handles it
+            setPartners(data.users.filter(u => u.role === 'partner'));
         } catch (error) {
             console.error('Error fetching pending partners:', error);
             toast.error('Failed to fetch pending partners');
@@ -53,7 +54,7 @@ export default function PendingPartnersPage() {
     const handleApprove = async (id: string) => {
         try {
             setProcessingId(id);
-            await approvePartner(id);
+            await adminService.approveUser(id);
             toast.success('Partner approved successfully');
             fetchPartners();
         } catch (error) {
@@ -67,7 +68,7 @@ export default function PendingPartnersPage() {
     const handleReject = async (id: string) => {
         try {
             setProcessingId(id);
-            await rejectPartner(id);
+            await adminService.rejectUser(id);
             toast.success('Partner rejected successfully');
             fetchPartners();
         } catch (error) {
@@ -118,7 +119,7 @@ export default function PendingPartnersPage() {
                             </TableHeader>
                             <TableBody>
                                 {partners.map((partner) => (
-                                    <TableRow key={partner.id}>
+                                    <TableRow key={partner._id}>
                                         <TableCell className="font-medium">
                                             {partner.email}
                                         </TableCell>
@@ -135,10 +136,10 @@ export default function PendingPartnersPage() {
                                                 size="sm"
                                                 variant="outline"
                                                 className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                                                onClick={() => handleApprove(partner.id)}
-                                                disabled={processingId === partner.id}
+                                                onClick={() => handleApprove(partner._id)}
+                                                disabled={processingId === partner._id}
                                             >
-                                                {processingId === partner.id ? (
+                                                {processingId === partner._id ? (
                                                     <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : (
                                                     <>
@@ -151,10 +152,10 @@ export default function PendingPartnersPage() {
                                                 size="sm"
                                                 variant="outline"
                                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => handleReject(partner.id)}
-                                                disabled={processingId === partner.id}
+                                                onClick={() => handleReject(partner._id)}
+                                                disabled={processingId === partner._id}
                                             >
-                                                {processingId === partner.id ? (
+                                                {processingId === partner._id ? (
                                                     <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : (
                                                     <>

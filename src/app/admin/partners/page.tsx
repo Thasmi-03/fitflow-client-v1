@@ -6,11 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Store, CheckCircle, XCircle, Users, Clock, UserCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getAllPartners, approveUser, rejectUser, AdminUser } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
+import { UserProfile } from '@/types/user';
 import { toast } from 'sonner';
 
 export default function PartnersPage() {
-    const [partners, setPartners] = useState<AdminUser[]>([]);
+    const [partners, setPartners] = useState<UserProfile[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState<'all' | 'approved' | 'pending'>('all');
 
@@ -21,7 +22,7 @@ export default function PartnersPage() {
     const loadPartners = async () => {
         try {
             setLoading(true);
-            const response = await getAllPartners();
+            const response = await adminService.getUsers('partner');
             setPartners(response.users);
         } catch (error: any) {
             if (error?.response?.status === 404) {
@@ -45,7 +46,7 @@ export default function PartnersPage() {
         if (!confirmed) return;
 
         try {
-            await approveUser(userId);
+            await adminService.approveUser(userId);
             toast.success('Partner approved successfully');
             loadPartners();
         } catch (error) {
@@ -62,7 +63,7 @@ export default function PartnersPage() {
         if (!confirmed) return;
 
         try {
-            await rejectUser(userId);
+            await adminService.rejectUser(userId);
             toast.success('Partner rejected and removed successfully');
             loadPartners();
         } catch (error) {
@@ -184,7 +185,7 @@ export default function PartnersPage() {
                                             </thead>
                                             <tbody>
                                                 {filteredPartners.map((partner) => (
-                                                    <tr key={partner._id || partner.id} className={`border-b hover:bg-gray-50 ${!partner.isApproved ? 'bg-yellow-50/30' : 'bg-white'}`}>
+                                                    <tr key={partner._id} className={`border-b hover:bg-gray-50 ${!partner.isApproved ? 'bg-yellow-50/30' : 'bg-white'}`}>
                                                         <td className="px-6 py-4 font-medium text-gray-900">
                                                             {partner.name || 'Partner Shop'}
                                                         </td>
@@ -211,7 +212,7 @@ export default function PartnersPage() {
                                                                     <Button
                                                                         size="sm"
                                                                         className="bg-black hover:bg-gray-800 text-white h-8"
-                                                                        onClick={() => handleApprove(partner.id || partner._id, partner.name || '')}
+                                                                        onClick={() => handleApprove(partner._id, partner.name || '')}
                                                                     >
                                                                         <CheckCircle className="w-4 h-4 mr-1" /> Approve
                                                                     </Button>
@@ -220,7 +221,7 @@ export default function PartnersPage() {
                                                                     size="sm"
                                                                     variant={partner.isApproved ? "outline" : "destructive"}
                                                                     className={partner.isApproved ? "text-red-600 border-red-200 hover:bg-red-50 h-8" : "bg-red-600 hover:bg-red-700 h-8"}
-                                                                    onClick={() => handleReject(partner.id || partner._id, partner.name || '')}
+                                                                    onClick={() => handleReject(partner._id, partner.name || '')}
                                                                 >
                                                                     <XCircle className="w-4 h-4 mr-1" /> Reject
                                                                 </Button>

@@ -35,8 +35,8 @@ export default function PartnerProfilePage() {
     const loadProfile = async () => {
         try {
             setLoading(true);
-            const response = await userService.getMyProfile();
-            const data = response.user || response;
+            const response = await userService.getProfile();
+            const data = response;
             setProfile(data);
             setShopDetails({
                 name: data.name || '',
@@ -57,7 +57,7 @@ export default function PartnerProfilePage() {
         setSaving(true);
 
         try {
-            await userService.updateMyProfile(shopDetails);
+            await userService.updateProfile(shopDetails);
             toast.success('Profile updated successfully!');
             await refreshUser();
             loadProfile();

@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Package, Sparkles, Shirt, Plus, ArrowRight, Heart, Store } from 'lucide-react';
 import Link from 'next/link';
 
-import { getClothes, Clothes } from '@/lib/api/clothes';
-import { getSmartSuggestions, SmartSuggestion } from '@/lib/api/partner-clothes';
-import { getMyProfile, getFavorites } from '@/lib/api/user';
+import { clothesService } from '@/services/clothes.service';
+import { partnerService } from '@/services/partner.service';
+import { userService } from '@/services/user.service';
+import { Clothes } from '@/types/clothes';
+import { SmartSuggestion } from '@/types/partner';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -38,14 +40,14 @@ export default function StylerDashboard() {
             setLoading(true);
 
             // Load user's own clothes
-            const myClothesRes = await getClothes({ limit: 4 });
+            const myClothesRes = await clothesService.getAll({ limit: 4 });
             setMyClothes(myClothesRes.clothes);
             setTotalClothesCount(myClothesRes.total);
 
             // Load smart suggestions from Partner clothes based on user's profile
             // This API filters by skin tone, gender, and occasion
             try {
-                const suggestionsRes = await getSmartSuggestions({ limit: 6 });
+                const suggestionsRes = await partnerService.getSmartSuggestions({ limit: 6 });
                 setSmartSuggestions(suggestionsRes.data || []);
                 setSuggestionFilters(suggestionsRes.meta?.filters || null);
                 console.log('Smart Suggestions loaded:', suggestionsRes);
@@ -55,7 +57,7 @@ export default function StylerDashboard() {
             }
 
             // Load favorites
-            const favoritesRes = await getFavorites().catch(() => ({ favorites: [] }));
+            const favoritesRes = await userService.getFavorites().catch(() => ({ favorites: [] }));
             setFavoriteCount(favoritesRes.favorites.length);
             setFavoriteSuggestions(favoritesRes.favorites.slice(0, 3));
         } catch (error) {

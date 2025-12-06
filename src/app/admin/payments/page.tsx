@@ -5,7 +5,7 @@ import { AdminDashboardSidebar } from '@/components/layout/AdminDashboardSidebar
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DollarSign, TrendingUp, CreditCard, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getAllPayments } from '@/lib/api/admin';
+import { adminService } from '@/services/admin.service';
 import { toast } from 'sonner';
 
 interface PaymentWithUser {
@@ -36,7 +36,7 @@ export default function PaymentsPage() {
     const loadPayments = async () => {
         try {
             setLoading(true);
-            const response = await getAllPayments();
+            const response = await adminService.getAllPayments();
             setPayments(response.payments || []);
         } catch (error: any) {
             if (error?.response?.status === 404) {
