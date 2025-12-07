@@ -105,7 +105,7 @@ export default function ProductDetailsPage() {
                                 </div>
 
                                 <div className="flex items-center justify-between p-4 bg-white rounded-lg border shadow-sm">
-                                    <span className="text-2xl font-bold text-[#e2c2b7]">${product.price.toFixed(2)}</span>
+                                    <span className="text-2xl font-bold text-[#e2c2b7]">Rs. {product.price.toFixed(2)}</span>
                                     <div className="flex gap-2">
                                         <Button variant="outline" size="icon" className="rounded-full">
                                             <Heart className="h-5 w-5" />

@@ -304,7 +304,7 @@ export default function SuggestionsPage() {
                                                     </div>
                                                     <div className="flex justify-between text-sm">
                                                         <span className="text-gray-600">Price:</span>
-                                                        <span className="font-bold text-[#e2c2b7]">${item.price.toFixed(2)}</span>
+                                                        <span className="font-bold text-[#e2c2b7]">Rs. {item.price.toFixed(2)}</span>
                                                     </div>
                                                     {typeof item.ownerId === 'object' && item.ownerId !== null && item.ownerId.location && (
                                                         <div className="pt-2 border-t border-gray-200">

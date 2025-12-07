@@ -182,7 +182,7 @@ export default function PartnerAnalyticsPage() {
                                                                                 <p><span className="font-medium">Size:</span> {cloth.size || 'N/A'}</p>
                                                                                 <p><span className="font-medium">Gender:</span> <span className="capitalize">{cloth.gender}</span></p>
                                                                                 <p><span className="font-medium">Occasion:</span> <span className="capitalize">{cloth.occasion}</span></p>
-                                                                                <p><span className="font-medium">Price:</span> ${cloth.price}</p>
+                                                                                <p><span className="font-medium">Price:</span> Rs. {cloth.price}</p>
                                                                                 <p><span className="font-medium">Stock:</span> {cloth.stock}</p>
                                                                                 <p><span className="font-medium">Sales:</span> {cloth.sales}</p>
                                                                                 <p><span className="font-medium">Visibility:</span> <span className="capitalize">{cloth.visibility}</span></p>

@@ -273,14 +273,14 @@ export default function AddPartnerClothesPage() {
                                                 name="price"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Price ($) *</FormLabel>
+                                                        <FormLabel>Price (LKR) *</FormLabel>
                                                         <FormControl>
                                                             <Input
                                                                 {...field}
                                                                 type="number"
                                                                 step="0.01"
                                                                 min="0"
-                                                                placeholder="0.00"
+                                                                placeholder="0"
                                                             />
                                                         </FormControl>
                                                         <FormMessage />

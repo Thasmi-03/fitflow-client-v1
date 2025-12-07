@@ -231,7 +231,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
                                         </div>
 
                                         <div>
-                                            <Label htmlFor="price">Price ($) *</Label>
+                                            <Label htmlFor="price">Price (LKR) *</Label>
                                             <Input
                                                 id="price"
                                                 name="price"
@@ -240,7 +240,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
                                                 min="0"
                                                 value={formData.price}
                                                 onChange={handleChange}
-                                                placeholder="0.00"
+                                                placeholder="0"
                                                 required
                                                 className="mt-1"
                                             />

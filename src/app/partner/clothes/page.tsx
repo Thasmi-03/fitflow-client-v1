@@ -248,7 +248,7 @@ export default function PartnerInventoryPage() {
 
                                                         <div className="space-y-1 text-sm text-gray-600 mb-3">
                                                             <p>Brand: <span className="font-medium">{item.brand}</span></p>
-                                                            <p>Price: <span className="font-bold text-[#e2c2b7] text-lg">${item.price}</span></p>
+                                                            <p>Price: <span className="font-bold text-[#e2c2b7] text-lg">Rs. {item.price}</span></p>
                                                             <p>Sales: <span className="font-medium">{item.sales || 0} sold</span></p>
                                                             <p>Visibility: <span className="font-medium capitalize">{item.visibility}</span></p>
                                                         </div>
