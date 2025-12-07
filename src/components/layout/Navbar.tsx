@@ -26,7 +26,7 @@ export function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-4 items-center">
-          <Link href="/auth/register">
+          <Link href="/partner-register">
             <Button variant="outline">Become a Partner</Button>
           </Link>
 
