@@ -53,12 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setIsLoggingOut(true);
     Cookies.remove("token");
-    router.push("/");
-    // Delay state update to prevent ProtectedRoute from redirecting to login
-    setTimeout(() => {
-      setUser(null);
-      setIsLoggingOut(false);
-    }, 100);
+    // Use window.location.href to force a full page reload and navigation to home
+    // This ensures state is cleared and avoids ProtectedRoute race conditions
+    window.location.href = "/";
   };
 
   return (
