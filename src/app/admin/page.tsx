@@ -167,9 +167,7 @@ export default function AdminDashboard() {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-3xl font-bold text-green-600">
-                                        Rs. {analytics?.totalRevenue?.toFixed(2) || '0.00'}
-                                    </div>
+                                    LKR {analytics?.totalRevenue?.toFixed(2) || '0.00'}
                                     <p className="text-xs text-gray-500 mt-1">All-time revenue</p>
                                 </CardContent>
                             </Card>

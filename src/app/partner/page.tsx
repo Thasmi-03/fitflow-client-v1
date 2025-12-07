@@ -109,7 +109,7 @@ export default function PartnerDashboard() {
                                     <DollarSign className="h-5 w-5 text-green-600" />
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-center">
-                                    <div className="text-3xl font-bold text-green-900">${totalRevenue.toFixed(2)}</div>
+                                    <div className="text-3xl font-bold text-green-900">LKR {totalRevenue.toFixed(2)}</div>
                                     <p className="text-xs text-green-700 mt-1">All time earnings</p>
                                 </CardContent>
                             </Card>
@@ -219,7 +219,7 @@ export default function PartnerDashboard() {
                                                             <p className="text-xs text-gray-600 mb-3">{product.category} • {product.color}</p>
 
                                                             <div className="flex items-center justify-between mb-3">
-                                                                <span className="text-lg font-bold text-[#e2c2b7]">${product.price}</span>
+                                                                <span className="text-lg font-bold text-[#e2c2b7]">LKR {product.price}</span>
                                                                 <span className="text-xs text-gray-600">{product.sales || 0} sold</span>
                                                             </div>
                                                         </div>
@@ -258,7 +258,7 @@ export default function PartnerDashboard() {
                                                         </p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="font-bold text-gray-900">${order.totalAmount}</p>
+                                                        <p className="font-bold text-gray-900">LKR {order.totalAmount}</p>
                                                         <span className={`text-xs px-2 py-1 rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                                                             order.status === 'pending' ? 'bg-blue-100 text-blue-800' :
                                                                 'bg-yellow-100 text-yellow-800'

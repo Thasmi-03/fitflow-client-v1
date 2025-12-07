@@ -120,7 +120,7 @@ export default function PaymentsPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-3xl font-bold text-green-600">
-                                        Rs. {totalRevenue.toFixed(2)}
+                                        LKR {totalRevenue.toFixed(2)}
                                     </div>
                                     <p className="text-xs text-gray-500 mt-1">From completed payments</p>
                                 </CardContent>
@@ -213,7 +213,7 @@ export default function PaymentsPage() {
                                                 </div>
                                                 <div className="text-right ml-4">
                                                     <div className={`text-2xl font-bold ${payment.status === 'completed' ? 'text-green-600' : 'text-gray-700'}`}>
-                                                        Rs. {payment.amount.toFixed(2)}
+                                                        LKR {payment.amount.toFixed(2)}
                                                     </div>
                                                     <p className="text-xs text-gray-500 mt-1">{payment.currency || 'LKR'}</p>
                                                 </div>
