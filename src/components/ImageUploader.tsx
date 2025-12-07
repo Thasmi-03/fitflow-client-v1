@@ -37,7 +37,8 @@ export default function ImageUploader({
   // Upload directly to Cloudinary (client-side)
   const uploadToCloudinary = async (fileToUpload: File) => {
     if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
-      return alert("Cloudinary not configured");
+      console.warn("Cloudinary not configured in frontend, falling back to backend upload.");
+      return uploadViaBackend(fileToUpload);
     }
 
     setUploading(true);
