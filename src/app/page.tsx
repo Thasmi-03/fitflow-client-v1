@@ -57,7 +57,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 className="bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900 px-8"
-                onClick={() => router.push('/auth/login')}
+                onClick={() => router.push('/auth/register')}
               >
                 Start Styling Now
               </Button>

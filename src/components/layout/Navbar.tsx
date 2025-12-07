@@ -26,11 +26,11 @@ export function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-4 items-center">
-          <Link href="/auth/login">
+          <Link href="/auth/register">
             <Button variant="outline">Become a Partner</Button>
           </Link>
 
-          <Button variant="outline" onClick={openLogin}>Signup</Button>
+          <Button variant="outline" onClick={openSignup}>Signup</Button>
           <Button variant="outline" onClick={openLogin}>Signin</Button>
         </div>
       </div>

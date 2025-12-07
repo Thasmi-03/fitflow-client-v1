@@ -76,12 +76,25 @@ export function RegisterForm({ isPartnerPage = false, onSuccess, onSwitchToLogin
       // Partners don't receive a token (they need admin approval)
       // Stylers and first admin receive a token immediately
       if (response.token && response.user) {
-        // Auto-approved users (stylers, first admin) - log them in
-        toast.success('Registration successful!', {
+        // Auto-approved users (stylers, first admin) - require manual login
+        toast.success('Registration successful! Please sign in.', {
           duration: 3000,
         });
-        await login(response.token, response.user);
-        // Don't call onSuccess here as login will redirect to dashboard
+        // Do not auto-login
+        if (onSwitchToLogin) {
+          onSwitchToLogin();
+        } else if (onSuccess) {
+          // If no switch handler, maybe close modal? 
+          // But user wants to click "Sign In". 
+          // If this is the standalone page, we might want to redirect to login?
+          // The user said "clicking Sign In".
+          // If I redirect automatically, it violates "clicking Sign In".
+          // But if I don't redirect, they are stuck on the register form.
+          // Let's look at the form. It has "Already have an account? Login".
+          // So I should just show the toast.
+          // However, for better UX, maybe I should clear the form?
+          // For now, I'll just show the toast and NOT login.
+        }
       } else {
         // Partners and subsequent admins need approval
         toast.success(response.message || 'Registration successful! Waiting for admin approval.', {

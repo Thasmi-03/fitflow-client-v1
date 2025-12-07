@@ -19,7 +19,7 @@ export function Footer() {
                         <h4 className="text-white font-semibold mb-4">Quick Links</h4>
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/auth/login" className="text-sm hover:text-[#e2c2b7] transition-colors">
+                                <Link href="/auth/register" className="text-sm hover:text-[#e2c2b7] transition-colors">
                                     Get Started
                                 </Link>
                             </li>

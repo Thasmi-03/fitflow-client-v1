@@ -62,17 +62,19 @@ export function StylerRegisterForm({ onSuccess, onSwitchToLogin }: StylerRegiste
         age: age || undefined
       });
 
-      toast.success('Registration successful!', {
+      toast.success('Registration successful! Please sign in.', {
         duration: 3000,
       });
 
-      if (response.token && response.user) {
-        await login(response.token, response.user);
-      }
+      // Removed auto-login
+      // if (response.token && response.user) {
+      //   await login(response.token, response.user);
+      // }
 
-      setTimeout(() => {
-        if (onSuccess) onSuccess();
-      }, 100);
+      // Removed auto-close
+      // setTimeout(() => {
+      //   if (onSuccess) onSuccess();
+      // }, 100);
     } catch (err: any) {
       console.error('Styler register error:', err);
       const errorMessage = err?.response?.data?.error || err.message || 'Registration failed';
