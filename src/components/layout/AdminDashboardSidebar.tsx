@@ -61,6 +61,11 @@ export function AdminDashboardSidebar() {
             href: '/admin/analytics',
             icon: <BarChart3 className="h-5 w-5" />,
         },
+        {
+            label: 'Settings',
+            href: '/admin/settings',
+            icon: <Settings className="h-5 w-5" />,
+        },
     ];
 
     const isActive = (href: string) => {
