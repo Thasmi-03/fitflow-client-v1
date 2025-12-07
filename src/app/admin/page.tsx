@@ -149,7 +149,6 @@ export default function AdminDashboard() {
                             <Card>
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                                        <DollarSign className="h-4 w-4" />
                                         Total Payments
                                     </CardTitle>
                                 </CardHeader>
@@ -162,7 +161,6 @@ export default function AdminDashboard() {
                             <Card>
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                                        <DollarSign className="h-4 w-4" />
                                         Total Revenue
                                     </CardTitle>
                                 </CardHeader>
