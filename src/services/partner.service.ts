@@ -6,6 +6,10 @@ export const partnerService = {
         const response = await apiClient.get("/partners/analytics");
         return response.data;
     },
+    getOwnAnalytics: async () => {
+        const response = await apiClient.get("/partners/my-analytics");
+        return response.data;
+    },
     getClothes: async () => {
         const response = await apiClient.get("/partnerclothes/mine");
         return response.data;

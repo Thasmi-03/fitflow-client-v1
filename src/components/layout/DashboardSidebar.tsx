@@ -77,6 +77,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             icon: <Store className="h-5 w-5" />,
         },
         {
+            label: 'Analytics',
+            href: '/partner/analytics',
+            icon: <BarChart3 className="h-5 w-5" />,
+        },
+        {
             label: 'Add Clothes',
             href: '/partner/clothes/add',
             icon: <Plus className="h-5 w-5" />,
