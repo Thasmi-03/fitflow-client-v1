@@ -175,7 +175,17 @@ export default function ProfileSettingsPage() {
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="skinTone">Skin Tone</Label>
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="skinTone">
+                                                    Skin Tone
+                                                    {formData.skinTone && user?.skinToneDetectedAt && (
+                                                        <span className="text-xs text-green-600 ml-2">
+                                                            ✓ Auto-detected
+                                                        </span>
+                                                    )}
+                                                </Label>
                                                 <Select
                                                     value={formData.skinTone}
                                                     onValueChange={(value) => handleSelectChange('skinTone', value)}
@@ -240,9 +250,21 @@ export default function ProfileSettingsPage() {
 
                                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                                             <Settings className="h-5 w-5 text-gray-400" />
-                                            <div>
+                                            <div className="flex-1">
                                                 <p className="text-sm text-gray-600">Skin Tone</p>
-                                                <p className="font-medium capitalize">{formData.skinTone}</p>
+                                                <div className="flex items-center gap-2">
+                                                    <p className="font-medium capitalize">{formData.skinTone || 'Not set'}</p>
+                                                    {user?.skinToneDetectedAt && (
+                                                        <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                                                            Auto-detected
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {user?.skinToneDetectedAt && (
+                                                    <p className="text-xs text-gray-500 mt-1">
+                                                        Detected on {new Date(user.skinToneDetectedAt).toLocaleDateString()}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
 

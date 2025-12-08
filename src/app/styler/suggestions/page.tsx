@@ -11,11 +11,13 @@ import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { partnerService } from '@/services/partner.service';
 import { userService } from '@/services/user.service';
+import { aiService } from '@/services/ai.service';
 import { PartnerClothes } from '@/types/partner';
 import { toast } from 'sonner';
 import { SkinTone } from '@/types/clothes';
+import ImageUploader from '@/components/ImageUploader';
 
-const skinTones: SkinTone[] = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
+const skinTones: string[] = ['fair', 'light', 'medium', 'tan', 'deep', 'dark', 'reddish', 'olive', 'pale'];
 
 import { useRouter } from 'next/navigation';
 
@@ -28,6 +30,14 @@ export default function SuggestionsPage() {
     const [filterColor, setFilterColor] = useState('all');
     const [filterBrand, setFilterBrand] = useState('all');
     const [favorites, setFavorites] = useState<string[]>([]);
+
+    // AI State
+    const [uploadedPhoto, setUploadedPhoto] = useState<string>('');
+    const [selectedSkinTone, setSelectedSkinTone] = useState<string>('');
+    const [aiLoading, setAiLoading] = useState(false);
+    const [detectingTone, setDetectingTone] = useState(false);
+    const [aiAdvice, setAiAdvice] = useState<string>('');
+    const [suggestedColors, setSuggestedColors] = useState<string[]>([]);
 
     useEffect(() => {
         loadData();
@@ -55,6 +65,27 @@ export default function SuggestionsPage() {
         }
     };
 
+    const handlePhotoUpload = async (url: string) => {
+        setUploadedPhoto(url);
+        setDetectingTone(true);
+
+        try {
+            const data = await aiService.detectSkinTone(url);
+            setSelectedSkinTone(data.skinTone);
+            toast.success(`Skin tone detected: ${data.skinTone} (${data.confidence} confidence)`, {
+                duration: 3000,
+            });
+        } catch (error) {
+            console.error('Error detecting skin tone:', error);
+            toast.error('Failed to detect skin tone. Please try another photo.', {
+                duration: Infinity,
+                closeButton: true,
+            });
+        } finally {
+            setDetectingTone(false);
+        }
+    };
+
     const handleFavorite = async (e: React.MouseEvent, clothId: string) => {
         e.stopPropagation(); // Prevent card click
         try {
@@ -70,6 +101,32 @@ export default function SuggestionsPage() {
                 closeButton: true,
             });
         }
+    };
+
+    const handleGetAiSuggestions = async () => {
+        if (!selectedSkinTone) {
+            toast.error('Please select a skin tone');
+            return;
+        }
+
+        try {
+            setAiLoading(true);
+            const data = await aiService.getSuggestions(selectedSkinTone);
+            setAiAdvice(data.advice);
+            setSuggestedColors(data.recommendedColors || []);
+            toast.success('AI Suggestions generated!');
+        } catch (error) {
+            console.error('Error getting AI suggestions:', error);
+            toast.error('Failed to get AI suggestions');
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+    const clearAiSuggestions = () => {
+        setAiAdvice('');
+        setSuggestedColors([]);
+        setSelectedSkinTone('');
     };
 
     const handleViewDetails = (clothId: string) => {
@@ -89,7 +146,13 @@ export default function SuggestionsPage() {
             const matchesColor = filterColor === 'all' || item.color === filterColor;
             const matchesBrand = filterBrand === 'all' || item.brand === filterBrand;
 
-            return matchesSearch && matchesCategory && matchesColor && matchesBrand;
+            // AI Color Matching
+            const matchesAiColor = suggestedColors.length === 0 || suggestedColors.some(sc =>
+                item.color.toLowerCase().includes(sc.toLowerCase()) ||
+                sc.toLowerCase().includes(item.color.toLowerCase())
+            );
+
+            return matchesSearch && matchesCategory && matchesColor && matchesBrand && matchesAiColor;
         });
     }, [clothes, searchTerm, filterCategory, filterColor, filterBrand]);
 
@@ -120,6 +183,125 @@ export default function SuggestionsPage() {
                                 Curated dresses from our partner shops
                             </p>
                         </div>
+
+                        {/* AI Suggestions Section */}
+                        <Card className="mb-8 bg-gradient-to-r from-primary/5 via-primary/10 to-transparent border-primary/20">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2 text-primary">
+                                    <Sparkles className="h-5 w-5" />
+                                    AI Stylist
+                                </CardTitle>
+                                <CardDescription>
+                                    Get personalized dress color recommendations based on your skin tone
+                                    {selectedSkinTone && (
+                                        <span className="block mt-2 text-sm font-medium text-primary">
+                                            Currently using: {selectedSkinTone.charAt(0).toUpperCase() + selectedSkinTone.slice(1)}
+                                        </span>
+                                    )}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-6">
+                                    {/* Photo Upload Section */}
+                                    <div>
+                                        <label className="text-sm font-medium mb-2 block">Upload Your Photo</label>
+                                        <div className="flex items-start gap-4">
+                                            {uploadedPhoto ? (
+                                                <div className="relative">
+                                                    <img
+                                                        src={uploadedPhoto}
+                                                        alt="Uploaded"
+                                                        className="w-32 h-32 object-cover rounded-lg border-2 border-primary"
+                                                    />
+                                                    <button
+                                                        onClick={() => {
+                                                            setUploadedPhoto('');
+                                                            setSelectedSkinTone('');
+                                                            setAiAdvice('');
+                                                            setSuggestedColors([]);
+                                                        }}
+                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <ImageUploader
+                                                    useCloudinaryDirect={true}
+                                                    autoUpload={true}
+                                                    onUploadComplete={handlePhotoUpload}
+                                                />
+                                            )}
+                                            <div className="flex-1">
+                                                <p className="text-sm text-muted-foreground">
+                                                    Upload a clear photo of yourself to automatically detect your skin tone
+                                                </p>
+                                                {detectingTone && (
+                                                    <p className="text-sm text-primary mt-2 flex items-center gap-2">
+                                                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent inline-block" />
+                                                        Analyzing skin tone...
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Detected/Selected Skin Tone Display */}
+                                    {selectedSkinTone && (
+                                        <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                                            <p className="text-sm font-medium mb-1">Detected Skin Tone:</p>
+                                            <p className="text-lg font-bold text-primary capitalize">{selectedSkinTone}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Get Suggestions Button */}
+                                    <Button
+                                        onClick={handleGetAiSuggestions}
+                                        disabled={aiLoading || !selectedSkinTone || detectingTone}
+                                        className="w-full bg-primary text-primary-foreground"
+                                        size="lg"
+                                    >
+                                        {aiLoading ? (
+                                            <>
+                                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent mr-2" />
+                                                Generating Suggestions...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Sparkles className="h-5 w-5 mr-2" />
+                                                Get Dress Suggestions
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+
+                                {aiAdvice && (
+                                    <div className="mt-6 p-4 bg-background/50 rounded-lg border border-border animate-in fade-in slide-in-from-top-2">
+                                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                                            <Sparkles className="h-4 w-4 text-primary" />
+                                            AI Recommendation
+                                        </h4>
+                                        <p className="text-muted-foreground mb-4">{aiAdvice}</p>
+
+                                        {suggestedColors.length > 0 && (
+                                            <div>
+                                                <p className="text-sm font-medium mb-2">Recommended Colors:</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {suggestedColors.map((color, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+                                                        >
+                                                            {color}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
 
                         {/* Search and Filters */}
                         <Card className="mb-6 bg-card border-border">

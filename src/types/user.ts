@@ -11,6 +11,7 @@ export interface UserProfile {
     favorites?: string[];
     profilePhoto?: string;
     skinTone?: string;
+    skinToneDetectedAt?: string;
     preferredStyle?: string;
 }
 
