@@ -19,6 +19,7 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { toTitleCase } from '@/lib/utils';
 
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -233,7 +234,7 @@ export default function AddPartnerClothesPage() {
                                                             <SelectContent>
                                                                 {PARTNER_CATEGORIES.map((cat) => (
                                                                     <SelectItem key={cat} value={cat}>
-                                                                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                                                        {toTitleCase(cat)}
                                                                     </SelectItem>
                                                                 ))}
                                                             </SelectContent>

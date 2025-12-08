@@ -1,9 +1,9 @@
-export type Category = 'dress' | 'shirt' | 'pants' | 'jacket' | 'skirt' | 'top' | 'shorts' | 'suit' | 'blazer' | 'sweater' | 'coat' | 'tshirt' | 'frock';
+export type Category = 'dress' | 'shirt' | 'pants' | 'jacket' | 'skirt' | 'top' | 'shorts' | 'suit' | 'blazer' | 'sweater' | 'coat' | 'tshirt' | 'frock' | 'saree' | 'kurta' | 'lehenga' | 'churidar' | 'kurti' | 'gown' | 'salwar suit' | 'anarkali' | 'bridal wear' | 'party wear' | 'crop top & skirt' | 'tops & tunics' | 't-shirt' | 'jean pants' | 'palazzo' | 'leggings' | 'jackets / shrugs' | 'nightwear' | 'maternity wear' | 'abaya / burkha' | 'men\'s shirt' | 'men\'s t-shirt' | 'men\'s trouser' | 'jeans' | 'joggers' | 'hoodies' | 'sweatshirts' | 'sherwani' | 'ethnic wear' | 'kids casual wear' | 'newborn dress';
 export type Color = 'red' | 'blue' | 'green' | 'yellow' | 'black' | 'white' | 'gray' | 'brown' | 'pink' | 'purple' | 'orange' | 'beige' | 'navy' | 'maroon' | 'teal' | 'coral' | 'multi';
 export type Occasion = 'casual' | 'formal' | 'business' | 'party' | 'wedding' | 'sports' | 'beach';
 export type SkinTone = 'fair' | 'light' | 'medium' | 'tan' | 'deep' | 'dark';
 
-export const CATEGORIES: Category[] = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'blazer', 'sweater', 'coat', 'tshirt', 'frock'];
+export const CATEGORIES: Category[] = ['dress', 'shirt', 'pants', 'jacket', 'skirt', 'top', 'shorts', 'suit', 'blazer', 'sweater', 'coat', 'tshirt', 'frock', 'saree', 'kurta', 'lehenga', 'churidar', 'kurti', 'gown', 'salwar suit', 'anarkali', 'bridal wear', 'party wear', 'crop top & skirt', 'tops & tunics', 't-shirt', 'jean pants', 'palazzo', 'leggings', 'jackets / shrugs', 'nightwear', 'maternity wear', 'abaya / burkha', 'men\'s shirt', 'men\'s t-shirt', 'men\'s trouser', 'jeans', 'joggers', 'hoodies', 'sweatshirts', 'sherwani', 'ethnic wear', 'kids casual wear', 'newborn dress'];
 export const PARTNER_CATEGORIES = CATEGORIES;
 export const OCCASIONS: Occasion[] = ['casual', 'formal', 'business', 'party', 'wedding', 'sports', 'beach'];
 
