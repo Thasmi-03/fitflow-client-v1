@@ -5,8 +5,10 @@ export interface User {
     email: string;
     role: Role;
     name?: string;
+    phone?: string;
     profilePhoto?: string;
     skinTone?: string;
+    skinToneDetectedAt?: string;
     preferredStyle?: string;
     // Add other common user fields here
 }
