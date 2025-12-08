@@ -8,7 +8,9 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                     {/* Brand Section */}
                     <div className="col-span-1">
-                        <h3 className="text-2xl font-bold text-primary-foreground mb-4">FitFlow</h3>
+                        <div className="mb-4">
+                            <img src="/logo.png" alt="FitFlow Logo" className="h-12 w-auto brightness-0 invert" />
+                        </div>
                         <p className="text-sm text-secondary-foreground/80 leading-relaxed">
                             Your personalized virtual styling platform. Find the perfect fit from anywhere.
                         </p>
