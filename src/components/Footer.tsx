@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 
 export function Footer() {
@@ -9,7 +10,13 @@ export function Footer() {
                     {/* Brand Section */}
                     <div className="col-span-1">
                         <div className="mb-4">
-                            <img src="/logo.png" alt="FitFlow Logo" className="h-12 w-auto brightness-0 invert" />
+                            <Image
+                                src="/logo.png"
+                                alt="FitFlow Logo"
+                                width={180}
+                                height={48}
+                                className="h-12 w-auto brightness-0 invert"
+                            />
                         </div>
                         <p className="text-sm text-secondary-foreground/80 leading-relaxed">
                             Your personalized virtual styling platform. Find the perfect fit from anywhere.

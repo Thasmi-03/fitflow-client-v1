@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import AuthModal from '@/components/ui/AuthModal';
 
@@ -23,7 +24,14 @@ export function Navbar() {
     <nav className="w-full bg-white border-b shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="FitFlow Logo" className="h-10 w-auto" />
+          <Image
+            src="/logo.png"
+            alt="FitFlow Logo"
+            width={150}
+            height={40}
+            className="h-10 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop Menu */}
