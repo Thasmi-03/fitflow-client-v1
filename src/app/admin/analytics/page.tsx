@@ -191,7 +191,7 @@ export default function AnalyticsPage() {
                                                     <span>Registrations</span>
                                                     <span>{data.registrations}</span>
                                                 </div>
-                                                <div className="w-full bg-muted rounded-full h-3">
+                                                <div className="w-full bg-secondary/20 rounded-full h-3">
                                                     <div
                                                         className="bg-success h-3 rounded-full transition-all"
                                                         style={{ width: `${maxRegistrations > 0 ? (data.registrations / maxRegistrations) * 100 : 0}%` }}
@@ -205,7 +205,7 @@ export default function AnalyticsPage() {
                                                     <span>Logins</span>
                                                     <span>{data.logins}</span>
                                                 </div>
-                                                <div className="w-full bg-muted rounded-full h-3">
+                                                <div className="w-full bg-secondary/20 rounded-full h-3">
                                                     <div
                                                         className="bg-info h-3 rounded-full transition-all"
                                                         style={{ width: `${maxLogins > 0 ? (data.logins / maxLogins) * 100 : 0}%` }}
@@ -230,11 +230,11 @@ export default function AnalyticsPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg">
+                                        <div className="flex items-center justify-between p-3 bg-primary/25 rounded-lg">
                                             <span className="font-medium">Stylists</span>
                                             <span className="text-lg font-bold text-primary">{analytics.totalStylists}</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-3 bg-info/10 rounded-lg">
+                                        <div className="flex items-center justify-between p-3 bg-info/25 rounded-lg">
                                             <span className="font-medium">Partners</span>
                                             <span className="text-lg font-bold text-info">{analytics.totalPartners}</span>
                                         </div>
@@ -252,11 +252,11 @@ export default function AnalyticsPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        <div className="flex items-center justify-between p-3 bg-success/10 rounded-lg">
+                                        <div className="flex items-center justify-between p-3 bg-success/25 rounded-lg">
                                             <span className="font-medium">Total Revenue</span>
                                             <span className="text-lg font-bold text-success">LKR {analytics.totalRevenue.toFixed(2)}</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-3 bg-warning/10 rounded-lg">
+                                        <div className="flex items-center justify-between p-3 bg-warning/25 rounded-lg">
                                             <span className="font-medium">Total Payments</span>
                                             <span className="text-lg font-bold text-warning">{analytics.totalPayments}</span>
                                         </div>
