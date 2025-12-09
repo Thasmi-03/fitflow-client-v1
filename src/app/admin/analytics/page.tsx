@@ -36,6 +36,7 @@ export default function AnalyticsPage() {
                     totalPartners: 0,
                     totalPayments: 0,
                     totalRevenue: 0,
+                    totalLogins: 0,
                     weeklyTrend: []
                 });
             } else {
