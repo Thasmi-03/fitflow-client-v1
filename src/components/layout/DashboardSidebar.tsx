@@ -160,6 +160,9 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                 <div className="flex flex-col h-full">
                     {/* Header */}
                     <div className="p-6 border-b border-sidebar-border flex flex-col items-center">
+                        <Link href="/" className="mb-4">
+                            <img src="/logo.png" alt="FitFlow Logo" className="h-12 w-auto" />
+                        </Link>
                         <div className="h-20 w-20 rounded-full overflow-hidden bg-sidebar-accent mb-3 border-2 border-sidebar-border">
                             {user?.profilePhoto ? (
                                 <img
