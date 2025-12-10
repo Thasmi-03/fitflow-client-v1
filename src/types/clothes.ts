@@ -24,7 +24,7 @@ export interface Cloth {
     note?: string; // For backward compatibility
     occasion?: string[] | string; // Can be array or string
     gender?: string;
-    skinTone?: string;
+    skinTone?: string[];
     age?: string;
     inStock?: boolean;
     partnerId?: string;
@@ -46,7 +46,7 @@ export interface CreateClothInput {
     note?: string;
     occasion?: string[] | string;
     gender?: string;
-    skinTone?: string; // Single string value, not array
+    skinTone?: string[]; // Array of skin tones
 }
 
 export interface UpdateClothInput extends Partial<CreateClothInput> {

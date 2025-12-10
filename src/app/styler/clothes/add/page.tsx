@@ -165,7 +165,7 @@ export default function AddClothesPage() {
                 category: data.category,
                 color: data.color,
                 occasion: data.occasion,
-                skinTone: data.skinTone && data.skinTone.length > 0 ? data.skinTone.join(',') : undefined,
+                skinTone: data.skinTone && data.skinTone.length > 0 ? data.skinTone : undefined,
                 note: data.description || undefined,
                 image: data.imageUrl || undefined,
             };
