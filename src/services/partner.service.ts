@@ -14,8 +14,8 @@ export const partnerService = {
         const response = await apiClient.get("/partnerclothes/mine");
         return response.data;
     },
-    getPublicClothes: async () => {
-        const response = await apiClient.get("/partnerclothes");
+    getPublicClothes: async (params?: any) => {
+        const response = await apiClient.get("/partnerclothes", { params });
         return response.data;
     },
     getClothById: async (id: string) => {

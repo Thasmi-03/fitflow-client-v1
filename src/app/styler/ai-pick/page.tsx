@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { aiService } from '@/services/ai.service';
 import { partnerService } from '@/services/partner.service';
+import { clothesService } from '@/services/clothes.service';
 import { userService } from '@/services/user.service';
 import ImageUploader from '@/components/ImageUploader';
 import { toast } from 'sonner';
@@ -71,6 +72,7 @@ export default function AIPickPage() {
     const [detectingTone, setDetectingTone] = useState(false);
     const [suggestedClothes, setSuggestedClothes] = useState<any[]>([]);
     const [loadingClothes, setLoadingClothes] = useState(false);
+    const [suggestionSource, setSuggestionSource] = useState<'myClothes' | 'marketplace'>('myClothes');
 
     useEffect(() => {
         // Load user profile to check if skin tone is already detected
@@ -78,11 +80,11 @@ export default function AIPickPage() {
     }, []);
 
     useEffect(() => {
-        // Load suggested clothes when skin tone is detected
+        // Load suggested clothes when skin tone is detected or source changes
         if (detectedSkinTone) {
             loadSuggestedClothes();
         }
-    }, [detectedSkinTone]);
+    }, [detectedSkinTone, suggestionSource]);
 
     const loadUserProfile = async () => {
         try {
@@ -120,11 +122,31 @@ export default function AIPickPage() {
     const loadSuggestedClothes = async () => {
         try {
             setLoadingClothes(true);
-            const response = await partnerService.getSmartSuggestions({
-                limit: 6,
-                skinTone: detectedSkinTone
-            });
-            setSuggestedClothes(response.data || []);
+
+            console.log('Loading clothes with source:', suggestionSource);
+            console.log('Detected skin tone:', detectedSkinTone);
+
+            if (suggestionSource === 'myClothes') {
+                // Fetch styler's own clothes filtered by skin tone
+                const params = {
+                    limit: 6,
+                    skinTone: detectedSkinTone
+                };
+                console.log('Fetching styler clothes with params:', params);
+                const response = await clothesService.getAll(params);
+                console.log('Styler clothes response:', response);
+                setSuggestedClothes(response.clothes || []);
+            } else {
+                // Fetch partner marketplace clothes filtered by skin tone
+                const params = {
+                    limit: 6,
+                    skinTone: detectedSkinTone
+                };
+                console.log('Fetching partner clothes with params:', params);
+                const response = await partnerService.getSmartSuggestions(params);
+                console.log('Partner clothes response:', response);
+                setSuggestedClothes(response.data || []);
+            }
         } catch (error) {
             console.error('Error loading suggested clothes:', error);
             toast.error('Failed to load clothing suggestions', {
@@ -294,6 +316,26 @@ export default function AIPickPage() {
                                 </Card>
 
                                 {/* Suggested Clothes */}
+                                {/* Toggle Buttons */}
+                                <div className="flex gap-3 mb-6">
+                                    <Button
+                                        variant={suggestionSource === 'myClothes' ? 'default' : 'outline'}
+                                        onClick={() => setSuggestionSource('myClothes')}
+                                        className="flex-1"
+                                    >
+                                        <Shirt className="h-4 w-4 mr-2" />
+                                        My Clothes
+                                    </Button>
+                                    <Button
+                                        variant={suggestionSource === 'marketplace' ? 'default' : 'outline'}
+                                        onClick={() => setSuggestionSource('marketplace')}
+                                        className="flex-1"
+                                    >
+                                        <ShoppingBag className="h-4 w-4 mr-2" />
+                                        Marketplace
+                                    </Button>
+                                </div>
+
                                 <Card className="bg-card border-border">
                                     <CardHeader>
                                         <div className="flex items-center justify-between">
@@ -316,15 +358,25 @@ export default function AIPickPage() {
                                             </div>
                                         ) : suggestedClothes.length === 0 ? (
                                             <div className="text-center py-12">
-                                                <Shirt className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                                                <ShoppingBag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                                                 <p className="text-muted-foreground mb-4">
-                                                    No clothing suggestions available yet
+                                                    {suggestionSource === 'myClothes'
+                                                        ? 'No clothes in your wardrobe matching your skin tone yet'
+                                                        : 'No clothing suggestions available yet'}
                                                 </p>
-                                                <Link href="/styler/suggestions">
-                                                    <Button variant="outline">
-                                                        Browse Marketplace
-                                                    </Button>
-                                                </Link>
+                                                {suggestionSource === 'myClothes' ? (
+                                                    <Link href="/styler/clothes/add">
+                                                        <Button variant="outline">
+                                                            Add Clothes
+                                                        </Button>
+                                                    </Link>
+                                                ) : (
+                                                    <Link href="/styler/suggestions">
+                                                        <Button variant="outline">
+                                                            Browse Marketplace
+                                                        </Button>
+                                                    </Link>
+                                                )}
                                             </div>
                                         ) : (
                                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

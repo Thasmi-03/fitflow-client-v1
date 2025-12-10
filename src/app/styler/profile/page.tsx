@@ -279,29 +279,6 @@ export default function ProfileSettingsPage() {
                                 )}
                             </CardContent>
                         </Card>
-
-                        {/* Account Stats */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Account Statistics</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="grid gap-4 md:grid-cols-3">
-                                    <div className="p-4 bg-gradient-to-br from-[#e2c2b7] to-[#d4b5a8] rounded-lg text-center">
-                                        <p className="text-2xl font-bold text-gray-900">0</p>
-                                        <p className="text-sm text-gray-700">Wardrobe Items</p>
-                                    </div>
-                                    <div className="p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg text-center">
-                                        <p className="text-2xl font-bold text-gray-900">0</p>
-                                        <p className="text-sm text-gray-700">Outfit Combinations</p>
-                                    </div>
-                                    <div className="p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-lg text-center">
-                                        <p className="text-2xl font-bold text-gray-900">0</p>
-                                        <p className="text-sm text-gray-700">Suggestions Viewed</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
                 </main>
             </div>
