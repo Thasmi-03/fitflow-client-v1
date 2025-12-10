@@ -12,10 +12,10 @@ export function Footer() {
                         <div className="mb-4">
                             <Image
                                 src="/logo.png"
-                                alt="FitFlow Logo"
-                                width={180}
-                                height={48}
-                                className="h-12 w-auto brightness-0 invert"
+                                alt="logo"
+                                width={120}
+                                height={40}
+                                className="h-10 w-auto brightness-0 invert"
                             />
                         </div>
                         <p className="text-sm text-secondary-foreground/80 leading-relaxed">
