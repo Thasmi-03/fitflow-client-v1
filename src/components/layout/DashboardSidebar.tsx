@@ -162,7 +162,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     {/* Header */}
                     <div className="p-6 border-b border-sidebar-border flex flex-col items-center">
                         <Link href="/" className="mb-4">
-                            <Image src="/logo.png" alt="FitFlow Logo" width={150} height={40} className="h-12 w-auto" priority />
+                            <Image src="/logo.svg" alt="FitFlow Logo" width={150} height={40} className="h-12 w-auto" priority />
                         </Link>
                         <div className="h-20 w-20 rounded-full overflow-hidden bg-sidebar-accent mb-3 border-2 border-sidebar-border">
                             {user?.profilePhoto ? (

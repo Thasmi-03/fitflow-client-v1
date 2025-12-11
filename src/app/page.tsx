@@ -22,12 +22,12 @@ export default function HomePage() {
   const loadFeaturedProducts = async () => {
     try {
       const response = await partnerService.getPublicClothes();
-      // Get the last 4 uploaded dresses (most recent)
+      // Get the last 8 uploaded dresses (most recent)
       if (response && response.data) {
         const sortedByDate = response.data.sort((a: PartnerClothes, b: PartnerClothes) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        setFeaturedProducts(sortedByDate.slice(0, 4));
+        setFeaturedProducts(sortedByDate.slice(0, 8));
       } else {
         setFeaturedProducts([]);
       }

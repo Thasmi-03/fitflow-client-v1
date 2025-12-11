@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="col-span-1">
                         <div className="mb-4">
                             <Image
-                                src="/logo.png"
+                                src="/logo.svg"
                                 alt="logo"
                                 width={120}
                                 height={40}

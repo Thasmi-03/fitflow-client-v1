@@ -112,7 +112,7 @@ export function AdminDashboardSidebar() {
                 <div className="flex flex-col h-full">
                     {/* Header */}
                     <div className="p-6 border-b border-sidebar-border flex flex-col items-center">
-                        <Image src="/logo.png" alt="FitFlow Logo" width={150} height={40} className="h-12 w-auto mb-4" priority />
+                        <Image src="/logo.svg" alt="FitFlow Logo" width={150} height={40} className="h-12 w-auto mb-4" priority />
                         <div className="h-20 w-20 rounded-full overflow-hidden bg-sidebar-accent mb-3 border-2 border-sidebar-border">
                             {user?.profilePhoto ? (
                                 <img
