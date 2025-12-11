@@ -44,37 +44,33 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl font-bold mb-6 text-gray-900 leading-tight">
-                Find Your Perfect Fit,<br />From Anywhere.
-              </h1>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Experience the newest trends. Try on clothes from top brands and partner shops from the comfort of your home.
-              </p>
-              <Button
-                size="lg"
-                className="bg-[#e2c2b7] hover:bg-[#d4b5a8] text-gray-900 px-8"
-                onClick={() => router.push('/auth/register')}
-              >
-                Start Styling Now
-              </Button>
-            </div>
-            <div className="relative">
-              <div className="aspect-[4/5] bg-gradient-to-br from-teal-700 to-teal-900 rounded-2xl overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80"
-                  alt="Fashion models"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+      <section className="relative h-screen min-h-[600px] flex items-center justify-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.pexels.com/photos/5709643/pexels-photo-5709643.jpeg"
+            alt="Fashion background"
+            className="w-full h-full object-cover"
+          />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-8 max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight">
+            Find Your Perfect Fit,<br />From Anywhere.
+          </h1>
+          <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto">
+            Experience the newest trends. Try on clothes from top brands and partner shops from the comfort of your home.
+          </p>
+          <Button
+            size="lg"
+            className="bg-white hover:bg-gray-100 text-gray-900 px-10 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            onClick={() => router.push('/auth/register')}
+          >
+            Start Styling Now
+          </Button>
         </div>
       </section>
 
