@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
             <ProtectedRoute allowedRoles={['admin']}>
                 <div className="flex min-h-screen bg-background">
                     <AdminDashboardSidebar />
-                    <main className="flex-1 p-8">
+                    <main className="flex-1 p-6">
                         <div className="text-center py-12">
                             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
                             <p className="mt-4 text-muted-foreground">Loading analytics...</p>
@@ -71,7 +71,7 @@ export default function AnalyticsPage() {
             <ProtectedRoute allowedRoles={['admin']}>
                 <div className="flex min-h-screen bg-background">
                     <AdminDashboardSidebar />
-                    <main className="flex-1 p-8">
+                    <main className="flex-1 p-6">
                         <div className="text-center py-12">
                             <BarChart3 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                             <p className="text-muted-foreground font-medium">No analytics data available</p>
@@ -92,10 +92,10 @@ export default function AnalyticsPage() {
             <div className="flex min-h-screen bg-background">
                 <AdminDashboardSidebar />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                                 <BarChart3 className="h-8 w-8 text-primary" />
                                 Analytics Dashboard
@@ -106,7 +106,7 @@ export default function AnalyticsPage() {
                         </div>
 
                         {/* Summary Stats */}
-                        <div className="grid gap-6 md:grid-cols-4 mb-8">
+                        <div className="grid gap-4 md:grid-cols-4 mb-6">
                             <Card>
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
@@ -163,18 +163,18 @@ export default function AnalyticsPage() {
                         </div>
 
                         {/* Weekly Trend Chart */}
-                        <Card className="mb-8">
+                        <Card className="mb-6">
                             <CardHeader>
                                 <CardTitle>Weekly Trend</CardTitle>
                                 <CardDescription>User registrations and login activity over the last 7 days</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-6">
+                                <div className="space-y-4">
                                     {analytics.weeklyTrend.map((data, index) => (
                                         <div key={index} className="space-y-3">
                                             <div className="flex items-center justify-between text-sm font-medium">
                                                 <span className="text-foreground">{data.week}</span>
-                                                <div className="flex items-center gap-6">
+                                                <div className="flex items-center gap-4">
                                                     <div className="flex items-center gap-2">
                                                         <UserPlus className="h-4 w-4 text-success" />
                                                         <span className="text-success">{data.registrations} registrations</span>
@@ -220,7 +220,7 @@ export default function AnalyticsPage() {
                         </Card>
 
                         {/* Additional Insights */}
-                        <div className="grid gap-6 md:grid-cols-2">
+                        <div className="grid gap-4 md:grid-cols-2">
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">

@@ -52,9 +52,9 @@ export default function PartnerAnalytics() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="partner" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
                             <p className="mt-2 text-muted-foreground">
                                 Track the performance of your uploaded dresses
@@ -68,7 +68,7 @@ export default function PartnerAnalytics() {
                         ) : (
                             <>
                                 {/* Stats Overview */}
-                                <div className="grid gap-6 md:grid-cols-3 mb-8">
+                                <div className="grid gap-4 md:grid-cols-3 mb-6">
                                     <Card className="bg-card border-border">
                                         <CardHeader className="pb-2">
                                             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">

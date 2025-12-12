@@ -87,10 +87,10 @@ export default function PartnerInventoryPage() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="partner" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h1 className="text-3xl font-bold text-foreground">Product Inventory</h1>
                                 <p className="mt-2 text-muted-foreground">

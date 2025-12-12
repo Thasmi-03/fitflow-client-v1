@@ -152,7 +152,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             {/* Sidebar */}
             <aside
                 className={`
-          fixed top-0 left-0 h-full w-64 bg-sidebar border-r border-sidebar-border z-40
+          fixed top-0 left-0 h-full w-60 bg-sidebar border-r border-sidebar-border z-40
           transform transition-transform duration-300 ease-in-out
           lg:translate-x-0
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -160,11 +160,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-6 border-b border-sidebar-border flex flex-col items-center">
-                        <Link href="/" className="mb-4">
+                    <div className="p-4 border-b border-sidebar-border flex flex-col items-center">
+                        <Link href="/" className="mb-3">
                             <Image src="/logo.svg" alt="FitFlow Logo" width={150} height={40} className="h-12 w-auto" priority />
                         </Link>
-                        <div className="h-20 w-20 rounded-full overflow-hidden bg-sidebar-accent mb-3 border-2 border-sidebar-border">
+                        <div className="h-16 w-16 rounded-full overflow-hidden bg-sidebar-accent mb-3 border-2 border-sidebar-border">
                             {user?.profilePhoto ? (
                                 <img
                                     src={user.profilePhoto}
@@ -184,14 +184,14 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4 space-y-2">
+                    <nav className="flex-1 p-3 space-y-1.5">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className={`
-                  flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                  flex items-center gap-2 px-3 py-2 rounded-lg transition-colors
                   ${isActive(item.href)
                                         ? 'bg-sidebar-primary text-sidebar-primary-foreground'
                                         : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
@@ -205,7 +205,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     </nav>
 
                     {/* Logout button */}
-                    <div className="p-4 border-t border-sidebar-border">
+                    <div className="p-3 border-t border-sidebar-border">
                         <Button
                             onClick={logout}
                             variant="outline"
@@ -219,7 +219,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             </aside>
 
             {/* Spacer for desktop */}
-            <div className="hidden lg:block w-64 flex-shrink-0" />
+            <div className="hidden lg:block w-60 flex-shrink-0" />
         </>
     );
 }

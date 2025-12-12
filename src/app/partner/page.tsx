@@ -68,10 +68,10 @@ export default function PartnerDashboard() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="partner" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h1 className="text-3xl font-bold text-foreground">Partner Dashboard</h1>
@@ -89,7 +89,7 @@ export default function PartnerDashboard() {
                         </div>
 
                         {/* Stats Grid */}
-                        <div className="grid gap-6 md:grid-cols-4 mb-8 items-stretch">
+                        <div className="grid gap-4 md:grid-cols-4 mb-8 items-stretch">
                             <Card className="bg-success/10 border-success/20 flex flex-col min-h-[140px]">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <CardTitle className="text-sm font-medium text-success">
@@ -223,7 +223,7 @@ export default function PartnerDashboard() {
                             </CardContent>
                         </Card>
 
-                        <div className="grid gap-6 md:grid-cols-2 items-stretch">
+                        <div className="grid gap-4 md:grid-cols-2 items-stretch">
                             {/* Recent Orders removed */}
 
                             {/* Quick Actions */}

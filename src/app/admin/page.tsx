@@ -67,7 +67,7 @@ export default function AdminDashboard() {
             <ProtectedRoute allowedRoles={['admin']}>
                 <div className="flex min-h-screen bg-background">
                     <AdminDashboardSidebar />
-                    <main className="flex-1 p-8">
+                    <main className="flex-1 p-6">
                         <div className="text-center py-12">
                             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
                             <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
@@ -83,10 +83,10 @@ export default function AdminDashboard() {
             <div className="flex min-h-screen bg-background">
                 <AdminDashboardSidebar />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
                             <p className="mt-2 text-muted-foreground">
                                 Monitor system statistics and manage platform operations
@@ -94,9 +94,9 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Stats Grid */}
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         <Users className="h-4 w-4" />
                                         Total Users
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         <UserCheck className="h-4 w-4" />
                                         Pending Approvals
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         <Store className="h-4 w-4" />
                                         Total Partners
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         <ShoppingBag className="h-4 w-4" />
                                         Total Stylists
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         Total Payments
                                     </CardTitle>
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         Total Revenue
                                     </CardTitle>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
                             </Card>
 
                             <Card>
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                         Total Logins
                                     </CardTitle>
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Quick Actions */}
-                        <div className="grid gap-6 md:grid-cols-2">
+                        <div className="grid gap-4 md:grid-cols-2">
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">

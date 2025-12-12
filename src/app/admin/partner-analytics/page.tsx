@@ -46,10 +46,10 @@ export default function PartnerAnalyticsPage() {
             <div className="flex min-h-screen bg-background">
                 <AdminDashboardSidebar />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-3xl font-bold text-foreground">Partner Analytics</h1>
                             <p className="mt-2 text-muted-foreground">
                                 View partner upload statistics and inventory details
@@ -57,7 +57,7 @@ export default function PartnerAnalyticsPage() {
                         </div>
 
                         {/* Stats Grid */}
-                        <div className="grid gap-6 md:grid-cols-3 mb-8">
+                        <div className="grid gap-4 md:grid-cols-3 mb-6">
                             <Card>
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground">

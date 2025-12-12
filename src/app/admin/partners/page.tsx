@@ -100,10 +100,10 @@ export default function PartnersPage() {
             <div className="flex min-h-screen bg-background">
                 <AdminDashboardSidebar />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h1 className="text-3xl font-bold text-foreground">Partners</h1>
                                 <p className="mt-2 text-muted-foreground">Manage partner approvals and access</p>
@@ -122,7 +122,7 @@ export default function PartnersPage() {
                         </div>
 
                         {/* Stats Cards */}
-                        <div className="grid gap-6 md:grid-cols-3 mb-8">
+                        <div className="grid gap-4 md:grid-cols-3 mb-6">
                             <Card>
                                 <CardContent className="pt-6">
                                     <div className="flex items-center justify-between">

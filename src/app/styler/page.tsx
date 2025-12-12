@@ -141,10 +141,10 @@ export default function StylerDashboard() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="styler" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h1 className="text-3xl font-bold text-foreground">Styler Dashboard</h1>
@@ -162,7 +162,7 @@ export default function StylerDashboard() {
                         </div>
 
                         {/* Stats Grid */}
-                        <div className="grid gap-6 md:grid-cols-3 mb-8">
+                        <div className="grid gap-4 md:grid-cols-3 mb-6">
                             <Card className="bg-card border-border">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -204,7 +204,7 @@ export default function StylerDashboard() {
                         </div>
 
                         {/* AI Picks Section */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -268,7 +268,7 @@ export default function StylerDashboard() {
                                     <p className="mt-4 text-muted-foreground">Loading AI picks...</p>
                                 </div>
                             ) : smartSuggestions.length > 0 ? (
-                                <div className="grid gap-6 md:grid-cols-3">
+                                <div className="grid gap-4 md:grid-cols-3">
                                     {smartSuggestions.slice(0, 6).map((item: SmartSuggestion) => (
                                         <Card key={item._id} className="overflow-hidden hover:bg-muted/50 transition-colors duration-300 bg-card border-border">
                                             <div className="h-48 bg-muted relative">
@@ -315,7 +315,7 @@ export default function StylerDashboard() {
                         </div>
 
                         {/* My Clothes Section */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                                     <Package className="h-5 w-5 text-primary" />
@@ -356,7 +356,7 @@ export default function StylerDashboard() {
                                     </div>
                                 </Card>
                             ) : (
-                                <div className="grid gap-6 md:grid-cols-4">
+                                <div className="grid gap-4 md:grid-cols-4">
                                     {myClothes.slice(0, 4).map((item) => (
                                         <Card key={item._id || item.id} className="overflow-hidden hover:bg-muted/50 transition-colors duration-300 bg-card border-border">
                                             <div className="h-48 bg-muted relative">
@@ -384,7 +384,7 @@ export default function StylerDashboard() {
 
                         {/* My Occasions Section */}
                         {occasions.length > 0 && (
-                            <div className="mb-8">
+                            <div className="mb-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                                         <Calendar className="h-5 w-5 text-primary" />
@@ -396,7 +396,7 @@ export default function StylerDashboard() {
                                         </Button>
                                     </Link>
                                 </div>
-                                <div className="grid gap-6 md:grid-cols-3">
+                                <div className="grid gap-4 md:grid-cols-3">
                                     {occasions.map((occasion) => (
                                         <Card key={occasion._id} className="overflow-hidden hover:bg-muted/50 transition-colors bg-card border-border">
                                             <CardHeader className="bg-muted/30">
@@ -433,7 +433,7 @@ export default function StylerDashboard() {
 
                         {/* Marketplace Section */}
                         {marketplaceItems.length > 0 && (
-                            <div className="mb-8">
+                            <div className="mb-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
                                         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -450,7 +450,7 @@ export default function StylerDashboard() {
                                         </Button>
                                     </Link>
                                 </div>
-                                <div className="grid gap-6 md:grid-cols-3">
+                                <div className="grid gap-4 md:grid-cols-3">
                                     {marketplaceItems.slice(0, 6).map((item) => (
                                         <Card key={item._id} className="overflow-hidden hover:bg-muted/50 transition-colors duration-300 bg-card border-border">
                                             <div className="h-48 bg-muted relative">

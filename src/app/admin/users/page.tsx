@@ -72,10 +72,10 @@ export default function UsersPage() {
             <div className="flex min-h-screen bg-background">
                 <AdminDashboardSidebar />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                                 Users
                             </h1>

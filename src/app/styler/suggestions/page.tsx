@@ -95,10 +95,10 @@ export default function SuggestionsPage() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="styler" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-7xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <div className="flex items-center gap-2 mb-2">
                                 <Store className="h-8 w-8 text-primary" />
                                 <h1 className="text-3xl font-bold text-foreground">Marketplace</h1>

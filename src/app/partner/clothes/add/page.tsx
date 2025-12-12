@@ -203,10 +203,10 @@ export default function AddPartnerClothesPage() {
             <div className="flex min-h-screen bg-background">
                 <DashboardSidebar role="partner" />
 
-                <main className="flex-1 p-8">
+                <main className="flex-1 p-6">
                     <div className="max-w-3xl mx-auto">
                         {/* Header */}
-                        <div className="mb-8">
+                        <div className="mb-6">
                             <Link href="/partner/clothes">
                                 <Button variant="ghost" className="mb-4">
                                     <ArrowLeft className="h-4 w-4 mr-2" />
@@ -226,8 +226,8 @@ export default function AddPartnerClothesPage() {
                             </CardHeader>
                             <CardContent>
                                 <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                        <div className="grid gap-6 md:grid-cols-2">
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                        <div className="grid gap-4 md:grid-cols-2">
                                             <FormField
                                                 control={form.control}
                                                 name="name"
