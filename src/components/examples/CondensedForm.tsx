@@ -31,8 +31,8 @@ const formSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email.",
     }),
-    role: z.string({
-        required_error: "Please select a role.",
+    role: z.string().min(1, {
+        message: "Please select a role.",
     }),
     bio: z.string().max(160).min(4),
     website: z.string().url().optional(),
