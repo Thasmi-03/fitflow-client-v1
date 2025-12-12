@@ -77,8 +77,8 @@ export default function SuggestionsPage() {
 
             const response = await partnerService.getPublicClothes(params);
             setItems(response.data || []);
-            setTotalPages(response.totalPages || 1);
-            setTotalItems(response.total || 0);
+            setTotalPages(response.meta?.pages || 1);
+            setTotalItems(response.meta?.total || 0);
         } catch (error) {
             console.error('Error loading items:', error);
             toast.error('Failed to load marketplace items', {
@@ -168,8 +168,7 @@ export default function SuggestionsPage() {
                         <Card className="bg-card border-border">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-foreground">
-                                    <Sparkles className="h-5 w-5" />
-                                    {detectedSkinTone ? 'AI Picks for You' : 'All Items'} ({totalItems})
+                                    All Items ({totalItems})
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -214,7 +213,7 @@ export default function SuggestionsPage() {
                                                                     </div>
                                                                 )}
                                                                 {item.price && (
-                                                                    <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                                                    <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-primary shadow-sm border border-[#a57c65]">
                                                                         Rs. {item.price}
                                                                     </div>
                                                                 )}

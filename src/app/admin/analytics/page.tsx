@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { adminService } from '@/services/admin.service';
 import { AdminStats } from '@/types/admin';
 import { toast } from 'sonner';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function AnalyticsPage() {
     const [analytics, setAnalytics] = useState<AdminStats | null>(null);
@@ -82,8 +83,6 @@ export default function AnalyticsPage() {
         );
     }
 
-    const maxRegistrations = Math.max(...analytics.weeklyTrend.map(w => w.registrations));
-    const maxLogins = Math.max(...analytics.weeklyTrend.map(w => w.logins));
     const totalRegistrations = analytics.weeklyTrend.reduce((sum, w) => sum + w.registrations, 0);
     const totalLogins = analytics.weeklyTrend.reduce((sum, w) => sum + w.logins, 0);
 
@@ -162,65 +161,8 @@ export default function AnalyticsPage() {
                             </Card>
                         </div>
 
-                        {/* Weekly Trend Chart */}
-                        <Card className="mb-6">
-                            <CardHeader>
-                                <CardTitle>Weekly Trend</CardTitle>
-                                <CardDescription>User registrations and login activity over the last 7 days</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    {analytics.weeklyTrend.map((data, index) => (
-                                        <div key={index} className="space-y-3">
-                                            <div className="flex items-center justify-between text-sm font-medium">
-                                                <span className="text-foreground">{data.week}</span>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <UserPlus className="h-4 w-4 text-success" />
-                                                        <span className="text-success">{data.registrations} registrations</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <LogIn className="h-4 w-4 text-info" />
-                                                        <span className="text-info">{data.logins} logins</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Registrations Bar */}
-                                            <div>
-                                                <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                                                    <span>Registrations</span>
-                                                    <span>{data.registrations}</span>
-                                                </div>
-                                                <div className="w-full bg-secondary/20 rounded-full h-3">
-                                                    <div
-                                                        className="bg-success h-3 rounded-full transition-all"
-                                                        style={{ width: `${maxRegistrations > 0 ? (data.registrations / maxRegistrations) * 100 : 0}%` }}
-                                                    ></div>
-                                                </div>
-                                            </div>
-
-                                            {/* Logins Bar */}
-                                            <div>
-                                                <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                                                    <span>Logins</span>
-                                                    <span>{data.logins}</span>
-                                                </div>
-                                                <div className="w-full bg-secondary/20 rounded-full h-3">
-                                                    <div
-                                                        className="bg-info h-3 rounded-full transition-all"
-                                                        style={{ width: `${maxLogins > 0 ? (data.logins / maxLogins) * 100 : 0}%` }}
-                                                    ></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-
                         {/* Additional Insights */}
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-4 md:grid-cols-2 mb-6">
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
@@ -265,6 +207,37 @@ export default function AnalyticsPage() {
                                 </CardContent>
                             </Card>
                         </div>
+
+                        {/* Weekly Trend Chart */}
+                        <Card className="mb-6">
+                            <CardHeader>
+                                <CardTitle>Weekly Trend</CardTitle>
+                                <CardDescription>User registrations and login activity over the last 7 days</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="h-[300px] w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart
+                                            data={analytics.weeklyTrend}
+                                            margin={{
+                                                top: 20,
+                                                right: 30,
+                                                left: 20,
+                                                bottom: 5,
+                                            }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="week" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="registrations" name="Registrations" fill="#22c55e" />
+                                            <Bar dataKey="logins" name="Logins" fill="#3b82f6" />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </main>
             </div>

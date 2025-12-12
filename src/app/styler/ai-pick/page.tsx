@@ -400,7 +400,7 @@ export default function AIPickPage() {
                                                                     </div>
                                                                 )}
                                                                 {item.price && (
-                                                                    <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                                                    <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-primary shadow-sm border border-[#a57c65]">
                                                                         Rs. {item.price}
                                                                     </div>
                                                                 )}

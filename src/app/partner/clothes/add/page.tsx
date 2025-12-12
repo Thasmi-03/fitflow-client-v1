@@ -227,7 +227,7 @@ export default function AddPartnerClothesPage() {
                             <CardContent>
                                 <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                        <div className="grid gap-4 md:grid-cols-2">
+                                        <div className="space-y-4">
                                             <FormField
                                                 control={form.control}
                                                 name="name"
@@ -257,142 +257,6 @@ export default function AddPartnerClothesPage() {
                                                                 placeholder="e.g., Zara, H&M"
                                                             />
                                                         </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="category"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Category *</FormLabel>
-                                                        <Select onValueChange={field.onChange} value={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select category" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {PARTNER_CATEGORIES.map((cat) => (
-                                                                    <SelectItem key={cat} value={cat}>
-                                                                        {toTitleCase(cat)}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="color"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Color *</FormLabel>
-                                                        <Select onValueChange={field.onChange} value={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select color" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {colors.map((color) => (
-                                                                    <SelectItem key={color} value={color}>
-                                                                        {color.charAt(0).toUpperCase() + color.slice(1)}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="price"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Price (LKR) *</FormLabel>
-                                                        <FormControl>
-                                                            <Input
-                                                                {...field}
-                                                                type="number"
-                                                                step="0.01"
-                                                                min="0"
-                                                                placeholder="0"
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="stock"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Stock Quantity *</FormLabel>
-                                                        <FormControl>
-                                                            <Input
-                                                                {...field}
-                                                                type="number"
-                                                                min="0"
-                                                                placeholder="0"
-                                                            />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="size"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Size *</FormLabel>
-                                                        <Select onValueChange={field.onChange} value={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select size" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {['XS', 'S', 'M', 'L', 'XL', 'XXL', 'One Size'].map((size) => (
-                                                                    <SelectItem key={size} value={size}>
-                                                                        {size}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-
-                                            <FormField
-                                                control={form.control}
-                                                name="visibility"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-foreground">Visibility *</FormLabel>
-                                                        <Select onValueChange={field.onChange} value={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select visibility" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                <SelectItem value="public">Public (Visible to Stylers)</SelectItem>
-                                                                <SelectItem value="private">Private (Hidden)</SelectItem>
-                                                            </SelectContent>
-                                                        </Select>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
@@ -451,6 +315,147 @@ export default function AddPartnerClothesPage() {
                                                 )}
                                             />
 
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="category"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Category *</FormLabel>
+                                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger>
+                                                                        <SelectValue placeholder="Select category" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    {PARTNER_CATEGORIES.map((cat) => (
+                                                                        <SelectItem key={cat} value={cat}>
+                                                                            {toTitleCase(cat)}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="color"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Color *</FormLabel>
+                                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger>
+                                                                        <SelectValue placeholder="Select color" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    {colors.map((color) => (
+                                                                        <SelectItem key={color} value={color}>
+                                                                            {color.charAt(0).toUpperCase() + color.slice(1)}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="price"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Price (LKR) *</FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    {...field}
+                                                                    type="number"
+                                                                    step="0.01"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="stock"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Stock Quantity *</FormLabel>
+                                                            <FormControl>
+                                                                <Input
+                                                                    {...field}
+                                                                    type="number"
+                                                                    min="0"
+                                                                    placeholder="0"
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="size"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Size *</FormLabel>
+                                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger>
+                                                                        <SelectValue placeholder="Select size" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    {['XS', 'S', 'M', 'L', 'XL', 'XXL', 'One Size'].map((size) => (
+                                                                        <SelectItem key={size} value={size}>
+                                                                            {size}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+
+                                                <FormField
+                                                    control={form.control}
+                                                    name="visibility"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-foreground">Visibility *</FormLabel>
+                                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger>
+                                                                        <SelectValue placeholder="Select visibility" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    <SelectItem value="public">Public (Visible to Stylers)</SelectItem>
+                                                                    <SelectItem value="private">Private (Hidden)</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
 
                                         <FormField

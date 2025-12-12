@@ -273,6 +273,65 @@ export default function AddClothesPage() {
                                                 )}
                                             />
 
+
+                                            <FormField
+                                                control={form.control}
+                                                name="imageUrl"
+                                                render={({ field }) => (
+                                                    <FormItem className="md:col-span-2">
+                                                        <FormLabel>Clothes Image</FormLabel>
+                                                        <FormControl>
+                                                            <div>
+                                                                {field.value ? (
+                                                                    <div className="mt-2 relative">
+                                                                        <img
+                                                                            src={field.value}
+                                                                            alt="Clothes preview"
+                                                                            className="w-full h-48 object-cover rounded-lg border"
+                                                                        />
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={removeImage}
+                                                                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                                                                        >
+                                                                            <X className="h-4 w-4" />
+                                                                        </button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="mt-2">
+                                                                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300">
+                                                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                                                {uploading ? (
+                                                                                    <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+                                                                                ) : (
+                                                                                    <Upload className="h-8 w-8 text-gray-400" />
+                                                                                )}
+                                                                                <p className="mt-2 text-sm text-gray-500">
+                                                                                    {uploading ? 'Uploading...' : 'Click to upload image'}
+                                                                                </p>
+                                                                            </div>
+                                                                            <input
+                                                                                type="file"
+                                                                                className="hidden"
+                                                                                accept="image/*"
+                                                                                onChange={handleImageUpload}
+                                                                                disabled={uploading}
+                                                                            />
+                                                                        </label>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+
+
+
+
+
                                             <FormField
                                                 control={form.control}
                                                 name="color"
@@ -358,58 +417,7 @@ export default function AddClothesPage() {
                                                 )}
                                             />
 
-                                            <FormField
-                                                control={form.control}
-                                                name="imageUrl"
-                                                render={({ field }) => (
-                                                    <FormItem className="md:col-span-2">
-                                                        <FormLabel>Clothes Image</FormLabel>
-                                                        <FormControl>
-                                                            <div>
-                                                                {field.value ? (
-                                                                    <div className="mt-2 relative">
-                                                                        <img
-                                                                            src={field.value}
-                                                                            alt="Clothes preview"
-                                                                            className="w-full h-48 object-cover rounded-lg border"
-                                                                        />
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={removeImage}
-                                                                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                                                                        >
-                                                                            <X className="h-4 w-4" />
-                                                                        </button>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="mt-2">
-                                                                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300">
-                                                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                                                {uploading ? (
-                                                                                    <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
-                                                                                ) : (
-                                                                                    <Upload className="h-8 w-8 text-gray-400" />
-                                                                                )}
-                                                                                <p className="mt-2 text-sm text-gray-500">
-                                                                                    {uploading ? 'Uploading...' : 'Click to upload image'}
-                                                                                </p>
-                                                                            </div>
-                                                                            <input
-                                                                                type="file"
-                                                                                className="hidden"
-                                                                                accept="image/*"
-                                                                                onChange={handleImageUpload}
-                                                                                disabled={uploading}
-                                                                            />
-                                                                        </label>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+
                                         </div>
 
                                         <FormField

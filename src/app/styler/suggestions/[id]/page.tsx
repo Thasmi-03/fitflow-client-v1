@@ -135,7 +135,7 @@ export default function ProductDetailsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-white rounded-lg border shadow-sm">
+                                <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-[#a57c65] shadow-sm">
                                     <span className="text-2xl font-bold text-[#e2c2b7]">Rs. {product.price.toFixed(2)}</span>
                                     <div className="flex gap-2">
                                         <Button

@@ -236,7 +236,7 @@ export default function PartnerInventoryPage() {
                                                                 <Package className="h-16 w-16 text-muted-foreground opacity-40" />
                                                             </div>
                                                         )}
-                                                        <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-foreground shadow-sm">
+                                                        <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-bold text-foreground shadow-sm border border-[#a57c65]">
                                                             {item.stock || 0} in stock
                                                         </div>
                                                     </div>
