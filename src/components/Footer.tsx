@@ -15,7 +15,7 @@ export function Footer() {
                                 alt="logo"
                                 width={120}
                                 height={40}
-                                className="h-10 w-auto brightness-0 invert"
+                                className="h-21 w-auto brightness-0 invert"
                             />
                         </div>
                         <p className="text-sm text-secondary-foreground/80 leading-relaxed">
