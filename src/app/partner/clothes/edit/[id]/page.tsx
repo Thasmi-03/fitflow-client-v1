@@ -263,6 +263,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
                                                 onChange={handleChange}
                                                 placeholder="0"
                                                 required
+                                                max="25000"
                                                 className="mt-1"
                                             />
                                         </div>
@@ -278,6 +279,7 @@ export default function EditPartnerClothesPage({ params }: { params: Promise<{ i
                                                 onChange={handleChange}
                                                 placeholder="0"
                                                 required
+                                                max="50"
                                                 className="mt-1"
                                             />
                                         </div>

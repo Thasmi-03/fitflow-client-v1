@@ -2,17 +2,14 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/contexts/AuthContext';
 import { authService } from '@/services/auth.service';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+import { loginSchema, LoginFormValues } from '@/schemas/auth.schema';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -21,7 +18,13 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
   const { login, loading } = useAuth();
-  const { register, handleSubmit } = useForm<LoginFormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
@@ -61,6 +64,7 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
             disabled={loading}
             className="mt-1"
           />
+          {errors.email && <p className="text-destructive text-sm mt-1">{errors.email.message}</p>}
         </div>
 
         <div>
@@ -72,6 +76,7 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
             disabled={loading}
             className="mt-1"
           />
+          {errors.password && <p className="text-destructive text-sm mt-1">{errors.password.message}</p>}
         </div>
 
         <Button type="submit" disabled={loading} className="w-full">

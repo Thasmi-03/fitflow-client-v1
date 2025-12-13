@@ -18,7 +18,7 @@ import { PARTNER_CATEGORIES } from '@/types/clothes';
 import { Upload, X, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { addPartnerClothSchema, AddPartnerClothFormValues } from '@/schemas/partner-clothes.schema';
 import { toTitleCase } from '@/lib/utils';
 
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -29,35 +29,14 @@ const skinTones = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
 const occasions = ['casual', 'formal', 'business', 'party', 'wedding', 'sports', 'beach'];
 
 // Zod validation schema
-const addClothSchema = z.object({
-    name: z.string().min(3, 'Product name must be at least 3 characters'),
-    brand: z.string().min(2, 'Brand name must be at least 2 characters'),
-    category: z.string().min(1, 'Please select a category'),
-    color: z.string().min(1, 'Please select a color'),
-    price: z.string().min(1, 'Price is required').refine((val) => {
-        const num = parseFloat(val);
-        return !isNaN(num) && num > 0;
-    }, 'Price must be a positive number'),
-    stock: z.string().min(1, 'Stock quantity is required').refine((val) => {
-        const num = parseInt(val);
-        return !isNaN(num) && num >= 0;
-    }, 'Stock must be 0 or greater'),
-    size: z.string().min(1, 'Please select a size'),
-    visibility: z.enum(['public', 'private']),
-    description: z.string().max(500, 'Description must be 500 characters or less').optional(),
-    imageUrl: z.string().optional(),
-    suitableSkinTones: z.array(z.string()).optional(),
-    occasion: z.array(z.string()).optional(),
-});
 
-type AddClothFormValues = z.infer<typeof addClothSchema>;
 
 export default function AddPartnerClothesPage() {
     const router = useRouter();
     const [uploading, setUploading] = useState(false);
 
-    const form = useForm<AddClothFormValues>({
-        resolver: zodResolver(addClothSchema),
+    const form = useForm<AddPartnerClothFormValues>({
+        resolver: zodResolver(addPartnerClothSchema),
         defaultValues: {
             name: '',
             category: '',
@@ -164,7 +143,7 @@ export default function AddPartnerClothesPage() {
         form.setValue('imageUrl', '');
     };
 
-    const onSubmit = async (data: AddClothFormValues) => {
+    const onSubmit = async (data: AddPartnerClothFormValues) => {
         try {
             await partnerService.addCloth({
                 name: data.name,
@@ -379,7 +358,8 @@ export default function AddPartnerClothesPage() {
                                                                     {...field}
                                                                     type="number"
                                                                     step="0.01"
-                                                                    min="0"
+                                                                    min="1"
+                                                                    max="25000"
                                                                     placeholder="0"
                                                                 />
                                                             </FormControl>
@@ -399,6 +379,7 @@ export default function AddPartnerClothesPage() {
                                                                     {...field}
                                                                     type="number"
                                                                     min="0"
+                                                                    max="50"
                                                                     placeholder="0"
                                                                 />
                                                             </FormControl>

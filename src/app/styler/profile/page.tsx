@@ -14,61 +14,51 @@ import { toast } from 'sonner';
 import { SkinTone } from '@/types/clothes';
 import ImageUploader from '@/components/ImageUploader';
 import { userService } from '@/services/user.service';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { stylerProfileSchema, StylerProfileFormValues } from '@/schemas/profile.schema';
 
 const skinTones: SkinTone[] = ['fair', 'light', 'medium', 'tan', 'deep', 'dark'];
 
 export default function ProfileSettingsPage() {
     const { user, refreshUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
-    const [formData, setFormData] = useState({
-        name: user?.name || '',
-        email: user?.email || '',
-        skinTone: (user?.skinTone as SkinTone) || 'medium',
-        preferredStyle: user?.preferredStyle || '',
-        profilePhoto: user?.profilePhoto || '',
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors, isSubmitting }
+    } = useForm<StylerProfileFormValues>({
+        resolver: zodResolver(stylerProfileSchema),
+        defaultValues: {
+            name: user?.name || '',
+            skinTone: (user?.skinTone as SkinTone) || 'medium',
+            preferredStyle: user?.preferredStyle || '',
+            profilePhoto: user?.profilePhoto || '',
+        },
     });
+
+    const formData = watch();
 
     useEffect(() => {
         if (user) {
-            setFormData(prev => ({
-                ...prev,
-                name: user.name || prev.name,
-                email: user.email || prev.email,
-                skinTone: (user.skinTone as SkinTone) || prev.skinTone,
-                preferredStyle: user.preferredStyle || prev.preferredStyle,
-                profilePhoto: user.profilePhoto || prev.profilePhoto,
-            }));
+            setValue('name', user.name || '');
+            setValue('skinTone', (user.skinTone as SkinTone) || 'medium');
+            setValue('preferredStyle', user.preferredStyle || '');
+            setValue('profilePhoto', user.profilePhoto || '');
         }
-    }, [user]);
+    }, [user, setValue]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-
+    const onSubmit = async (data: StylerProfileFormValues) => {
         try {
             await userService.updateProfile({
-                name: formData.name,
-                // email cannot be updated directly usually
-                profilePhoto: formData.profilePhoto,
-                skinTone: formData.skinTone,
-                preferredStyle: formData.preferredStyle,
+                name: data.name,
+                profilePhoto: data.profilePhoto,
+                skinTone: data.skinTone,
+                preferredStyle: data.preferredStyle,
             });
 
             toast.success('Profile updated successfully!', {
@@ -82,8 +72,6 @@ export default function ProfileSettingsPage() {
                 duration: Infinity,
                 closeButton: true,
             });
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -122,7 +110,7 @@ export default function ProfileSettingsPage() {
                             </CardHeader>
                             <CardContent>
                                 {isEditing ? (
-                                    <form onSubmit={handleSubmit} className="space-y-6">
+                                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                         <div className="flex justify-center mb-6">
                                             <div className="w-32">
                                                 <Label className="mb-2 block text-center">Profile Photo</Label>
@@ -139,7 +127,7 @@ export default function ProfileSettingsPage() {
                                                         autoUpload={true}
                                                         onUploadStart={() => setIsUploadingPhoto(true)}
                                                         onUploadComplete={(url) => {
-                                                            setFormData({ ...formData, profilePhoto: url });
+                                                            setValue('profilePhoto', url);
                                                             setIsUploadingPhoto(false);
                                                         }}
                                                     />
@@ -151,23 +139,20 @@ export default function ProfileSettingsPage() {
                                             <div>
                                                 <Label htmlFor="name">Full Name</Label>
                                                 <Input
+                                                    {...register('name')}
                                                     id="name"
-                                                    name="name"
-                                                    value={formData.name}
-                                                    onChange={handleChange}
                                                     placeholder="Your name"
                                                     className="mt-1"
                                                 />
+                                                {errors.name && <p className="text-destructive text-sm mt-1">{errors.name.message}</p>}
                                             </div>
 
                                             <div>
                                                 <Label htmlFor="email">Email</Label>
                                                 <Input
                                                     id="email"
-                                                    name="email"
                                                     type="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
+                                                    value={user?.email}
                                                     placeholder="your.email@example.com"
                                                     className="mt-1"
                                                     disabled
@@ -188,7 +173,7 @@ export default function ProfileSettingsPage() {
                                                 </Label>
                                                 <Select
                                                     value={formData.skinTone}
-                                                    onValueChange={(value) => handleSelectChange('skinTone', value)}
+                                                    onValueChange={(value) => setValue('skinTone', value as SkinTone)}
                                                 >
                                                     <SelectTrigger className="mt-1 w-full">
                                                         <SelectValue placeholder="Select skin tone" />
@@ -201,24 +186,24 @@ export default function ProfileSettingsPage() {
                                                         ))}
                                                     </SelectContent>
                                                 </Select>
+                                                {errors.skinTone && <p className="text-destructive text-sm mt-1">{errors.skinTone.message}</p>}
                                             </div>
 
                                             <div>
                                                 <Label htmlFor="preferredStyle">Preferred Style</Label>
                                                 <Input
+                                                    {...register('preferredStyle')}
                                                     id="preferredStyle"
-                                                    name="preferredStyle"
-                                                    value={formData.preferredStyle}
-                                                    onChange={handleChange}
                                                     placeholder="e.g., Casual, Formal, Bohemian"
                                                     className="mt-1"
                                                 />
+                                                {errors.preferredStyle && <p className="text-destructive text-sm mt-1">{errors.preferredStyle.message}</p>}
                                             </div>
                                         </div>
 
                                         <div className="flex gap-4">
-                                            <Button type="submit" disabled={loading || isUploadingPhoto} className="flex-1">
-                                                {loading || isUploadingPhoto ? (isUploadingPhoto ? 'Uploading Photo...' : 'Saving...') : 'Save Changes'}
+                                            <Button type="submit" disabled={isSubmitting || isUploadingPhoto} className="flex-1">
+                                                {isSubmitting || isUploadingPhoto ? (isUploadingPhoto ? 'Uploading Photo...' : 'Saving...') : 'Save Changes'}
                                             </Button>
                                             <Button
                                                 type="button"
@@ -244,7 +229,7 @@ export default function ProfileSettingsPage() {
                                             <Mail className="h-5 w-5 text-gray-400" />
                                             <div>
                                                 <p className="text-sm text-gray-600">Email</p>
-                                                <p className="font-medium">{formData.email}</p>
+                                                <p className="font-medium">{user?.email}</p>
                                             </div>
                                         </div>
 

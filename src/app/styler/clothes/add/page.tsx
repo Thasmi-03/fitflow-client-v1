@@ -14,30 +14,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { clothesService } from '@/services/clothes.service';
 import { toast } from 'sonner';
-import { CATEGORIES, OCCASIONS, Occasion, SKIN_TONES, SkinTone } from '@/types/clothes';
+import { CATEGORIES, COLORS, OCCASIONS, Occasion, SKIN_TONES, SkinTone } from '@/types/clothes';
 import { Upload, X, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { addClothesSchema, AddClothesFormValues } from '@/schemas/clothes.schema';
 import { toTitleCase } from '@/lib/utils';
 
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-const colors = ['red', 'blue', 'green', 'yellow', 'black', 'white', 'gray', 'brown', 'pink', 'purple', 'orange', 'beige', 'navy', 'maroon', 'teal', 'coral', 'multi'] as const;
 
-// Zod validation schema
-const addClothesSchema = z.object({
-    name: z.string().min(3, 'Name must be at least 3 characters'),
-    category: z.string().min(1, 'Please select a category'),
-    color: z.string().min(1, 'Please select a color'),
-    occasion: z.array(z.string()).min(1, 'Please select at least 1 occasion').max(4, 'Please select maximum 4 occasions'),
-    skinTone: z.array(z.string()).optional(),
-    description: z.string().max(500, 'Description must be 500 characters or less').optional(),
-    imageUrl: z.string().optional(),
-});
-
-type AddClothesFormValues = z.infer<typeof addClothesSchema>;
 
 export default function AddClothesPage() {
     const router = useRouter();
@@ -112,7 +99,7 @@ export default function AddClothesPage() {
                         }
                         if (aiData.color) {
                             const detectedColor = aiData.color.toLowerCase();
-                            if (colors.includes(detectedColor as any)) {
+                            if (COLORS.includes(detectedColor as any)) {
                                 form.setValue('color', detectedColor);
                             }
                         }
@@ -345,7 +332,7 @@ export default function AddClothesPage() {
                                                                 </SelectTrigger>
                                                             </FormControl>
                                                             <SelectContent>
-                                                                {colors.map((color) => (
+                                                                {COLORS.map((color) => (
                                                                     <SelectItem key={color} value={color}>
                                                                         {color.charAt(0).toUpperCase() + color.slice(1)}
                                                                     </SelectItem>

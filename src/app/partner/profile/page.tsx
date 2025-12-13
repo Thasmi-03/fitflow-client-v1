@@ -13,20 +13,33 @@ import { toast } from 'sonner';
 import { userService } from '@/services/user.service';
 import { UserProfile } from '@/types/user';
 import ImageUploader from '@/components/ImageUploader';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { partnerProfileSchema, PartnerProfileFormValues } from '@/schemas/profile.schema';
 
 export default function PartnerProfilePage() {
     const { user, refreshUser } = useAuth();
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
-    const [shopDetails, setShopDetails] = useState({
-        name: '',
-        phone: '',
-        location: '',
-        profilePhoto: ''
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors, isSubmitting }
+    } = useForm<PartnerProfileFormValues>({
+        resolver: zodResolver(partnerProfileSchema),
+        defaultValues: {
+            name: '',
+            phone: '',
+            location: '',
+            profilePhoto: ''
+        }
     });
+
+    const profilePhoto = watch('profilePhoto');
 
     useEffect(() => {
         loadProfile();
@@ -38,12 +51,12 @@ export default function PartnerProfilePage() {
             const response = await userService.getProfile();
             const data = response;
             setProfile(data);
-            setShopDetails({
-                name: data.name || '',
-                phone: data.phone || '',
-                location: data.location || '',
-                profilePhoto: data.profilePhoto || ''
-            });
+
+            // Update form values
+            setValue('name', data.name || '');
+            setValue('phone', data.phone || '');
+            setValue('location', data.location || '');
+            setValue('profilePhoto', data.profilePhoto || '');
         } catch (error) {
             console.error('Error loading profile:', error);
             toast.error('Failed to load profile', {
@@ -55,12 +68,9 @@ export default function PartnerProfilePage() {
         }
     };
 
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSaving(true);
-
+    const onSubmit = async (data: PartnerProfileFormValues) => {
         try {
-            await userService.updateProfile(shopDetails);
+            await userService.updateProfile(data);
             toast.success('Profile updated successfully!', {
                 duration: 3000,
             });
@@ -72,16 +82,7 @@ export default function PartnerProfilePage() {
                 duration: Infinity,
                 closeButton: true,
             });
-        } finally {
-            setSaving(false);
         }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setShopDetails({
-            ...shopDetails,
-            [e.target.name]: e.target.value
-        });
     };
 
     if (loading) {
@@ -157,14 +158,14 @@ export default function PartnerProfilePage() {
                                     <CardDescription className="text-muted-foreground">Information visible to stylists when they view your products</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <form onSubmit={handleSave} className="space-y-4">
+                                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                                         <div className="flex justify-center mb-6">
                                             <div className="w-32">
                                                 <Label className="mb-2 block text-center text-foreground">Shop Logo / Photo</Label>
                                                 <div className="flex flex-col items-center gap-2">
-                                                    {shopDetails.profilePhoto && (
+                                                    {profilePhoto && (
                                                         <img
-                                                            src={shopDetails.profilePhoto}
+                                                            src={profilePhoto}
                                                             alt="Profile"
                                                             className="w-24 h-24 rounded-full object-cover border-2 border-border"
                                                         />
@@ -174,7 +175,7 @@ export default function PartnerProfilePage() {
                                                         autoUpload={true}
                                                         onUploadStart={() => setIsUploadingPhoto(true)}
                                                         onUploadComplete={(url) => {
-                                                            setShopDetails({ ...shopDetails, profilePhoto: url });
+                                                            setValue('profilePhoto', url);
                                                             setIsUploadingPhoto(false);
                                                         }}
                                                     />
@@ -188,13 +189,12 @@ export default function PartnerProfilePage() {
                                                 Shop Name
                                             </Label>
                                             <Input
+                                                {...register('name')}
                                                 id="name"
-                                                name="name"
-                                                value={shopDetails.name}
-                                                onChange={handleChange}
                                                 placeholder="Enter your shop name"
                                                 className="mt-1"
                                             />
+                                            {errors.name && <p className="text-destructive text-sm mt-1">{errors.name.message}</p>}
                                             <p className="text-xs text-muted-foreground mt-1">
                                                 This will be displayed as your shop's name
                                             </p>
@@ -206,13 +206,12 @@ export default function PartnerProfilePage() {
                                                 Location / Address
                                             </Label>
                                             <Input
+                                                {...register('location')}
                                                 id="location"
-                                                name="location"
-                                                value={shopDetails.location}
-                                                onChange={handleChange}
                                                 placeholder="Enter your shop address"
                                                 className="mt-1"
                                             />
+                                            {errors.location && <p className="text-destructive text-sm mt-1">{errors.location.message}</p>}
                                             <p className="text-xs text-muted-foreground mt-1">
                                                 Stylists will see this location when viewing your products
                                             </p>
@@ -224,13 +223,12 @@ export default function PartnerProfilePage() {
                                                 Phone Number
                                             </Label>
                                             <Input
+                                                {...register('phone')}
                                                 id="phone"
-                                                name="phone"
-                                                value={shopDetails.phone}
-                                                onChange={handleChange}
                                                 placeholder="Enter your contact number"
                                                 className="mt-1"
                                             />
+                                            {errors.phone && <p className="text-destructive text-sm mt-1">{errors.phone.message}</p>}
                                             <p className="text-xs text-muted-foreground mt-1">
                                                 Contact number for customer inquiries
                                             </p>
@@ -239,10 +237,10 @@ export default function PartnerProfilePage() {
                                         <div className="pt-4">
                                             <Button
                                                 type="submit"
-                                                disabled={saving || isUploadingPhoto}
+                                                disabled={isSubmitting || isUploadingPhoto}
                                                 className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground"
                                             >
-                                                {saving || isUploadingPhoto ? (
+                                                {isSubmitting || isUploadingPhoto ? (
                                                     <>
                                                         <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent mr-2"></div>
                                                         {isUploadingPhoto ? 'Uploading Photo...' : 'Saving...'}
