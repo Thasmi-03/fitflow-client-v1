@@ -60,6 +60,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             icon: <Sparkles className="h-5 w-5" />,
         },
         {
+            label: 'Closet Insights',
+            href: '/styler/analytics',
+            icon: <BarChart3 className="h-5 w-5" />,
+        },
+        {
             label: 'Marketplace',
             href: '/styler/suggestions',
             icon: <Store className="h-5 w-5" />,
