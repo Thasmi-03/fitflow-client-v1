@@ -1,5 +1,7 @@
 'use client';
 
+import apiClient from '@/lib/apiClient';
+
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +16,7 @@ import { clothesService } from '@/services/clothes.service';
 import { Clothes, CATEGORIES, COLORS, SKIN_TONES } from '@/types/clothes';
 import { toast } from 'sonner';
 import { AddClothesModal } from '@/components/modals/AddClothesModal';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+
 
 export default function StylerClothesPage() {
     const [clothes, setClothes] = useState<Clothes[]>([]);
@@ -108,17 +109,13 @@ export default function StylerClothesPage() {
 
     const handleWear = async (item: Clothes) => {
         try {
-            const token = Cookies.get('token');
-            await axios.post(
-                'http://localhost:5000/api/analytics/wear',
+            await apiClient.post(
+                '/analytics/wear',
                 {
                     dressId: item.id || (item as any)._id,
                     color: item.color,
                     category: item.category,
                     date: new Date(),
-                },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
                 }
             );
             toast.success(`Recorded usage for ${item.name}`);
